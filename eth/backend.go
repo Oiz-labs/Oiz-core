@@ -51,7 +51,7 @@ import (
 	"github.com/ethereum/go-ethereum/eth/ethconfig"
 	"github.com/ethereum/go-ethereum/eth/filters"
 	"github.com/ethereum/go-ethereum/eth/gasprice"
-	"github.com/ethereum/go-ethereum/eth/protocols/bsc"
+	"github.com/ethereum/go-ethereum/eth/protocols/oiz"
 	"github.com/ethereum/go-ethereum/eth/protocols/eth"
 	"github.com/ethereum/go-ethereum/eth/protocols/snap"
 	"github.com/ethereum/go-ethereum/eth/tracers"
@@ -797,7 +797,7 @@ func (s *Ethereum) Protocols() []p2p.Protocol {
 	if !s.config.DisableSnapProtocol && s.config.SnapshotCache > 0 {
 		protos = append(protos, snap.MakeProtocols((*snapHandler)(s.handler))...)
 	}
-	protos = append(protos, bsc.MakeProtocols((*bscHandler)(s.handler))...)
+	protos = append(protos, oiz.MakeProtocols((*oizHandler)(s.handler))...)
 
 	return protos
 }
@@ -914,9 +914,9 @@ func (s *Ethereum) setupDiscovery() error {
 		s.discmix.AddSource(iter)
 	}
 
-	// Add bsc nodes from DNS.
-	if len(s.config.BscDiscoveryURLs) > 0 {
-		iter, err := dnsclient.NewIterator(s.config.BscDiscoveryURLs...)
+	// Add oiz nodes from DNS.
+	if len(s.config.OizDiscoveryURLs) > 0 {
+		iter, err := dnsclient.NewIterator(s.config.OizDiscoveryURLs...)
 		if err != nil {
 			return err
 		}

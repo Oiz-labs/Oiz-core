@@ -14,4 +14,4 @@ geth --config ${DATA_DIR}/config.toml --datadir ${DATA_DIR} --netrestrict ${CLUS
     --verbosity ${VERBOSE} \
     --bootnodes enode://${BOOTSTRAP_PUB_KEY}@${BOOTSTRAP_IP}:${BOOTSTRAP_TCP_PORT} \
     --mine -unlock ${VALIDATOR_ADDR} --miner.etherbase ${VALIDATOR_ADDR} --password /dev/null \
-    --rpc.allow-unprotected-txs --history.transactions 15768000 >${DATA_DIR}/bscnode-validator.log
+    --rpc.allow-unprotected-txs --history.transactions 15768000 >${DATA_DIR}/oiznode-validator.log

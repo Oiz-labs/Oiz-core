@@ -16,9 +16,9 @@ rpc core db: refactor the interface of trie access
 ```
 
 #### Example: Big Scope
-if the change is too big, impact several scopes, the scope name can be bep, feat or fix
+if the change is too big, impact several scopes, the scope name can be oiz, feat or fix
 ```
-bep130: implement parallel evm
+oiz130: implement parallel evm
 
 feat: implement parallel trie prefetch
 

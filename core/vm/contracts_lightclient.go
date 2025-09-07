@@ -345,7 +345,7 @@ func proofOpsVerifier(poz merkle.ProofOperators) error {
 }
 
 func keyVerifier(key string) error {
-	// https://github.com/bnb-chain/tendermint/blob/72375a6f3d4a72831cc65e73363db89a0073db38/crypto/merkle/proof_key_path.go#L88
+	// https://github.com/oiz-labs/tendermint/blob/72375a6f3d4a72831cc65e73363db89a0073db38/crypto/merkle/proof_key_path.go#L88
 	// since the upper function is ambiguous, `x:00` can be decoded to both kind of key type
 	// we check the key here to make sure the key will not start from `x:`
 	if strings.HasPrefix(url.PathEscape(key), "x:") {

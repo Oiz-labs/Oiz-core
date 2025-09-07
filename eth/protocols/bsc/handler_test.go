@@ -1,4 +1,4 @@
-package bsc
+package oiz
 
 import (
 	"math/big"

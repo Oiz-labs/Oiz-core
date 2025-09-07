@@ -1,4 +1,4 @@
-package bsc
+package oiz
 
 import (
 	"errors"
@@ -10,27 +10,27 @@ import (
 
 // Constants to match up protocol versions and messages
 const (
-	Bsc1 = 1
-	Bsc2 = 2
+	Oiz1 = 1
+	Oiz2 = 2
 )
 
 // ProtocolName is the official short name of the `bsc` protocol used during
 // devp2p capability negotiation.
-const ProtocolName = "bsc"
+const ProtocolName = "oiz"
 
 // ProtocolVersions are the supported versions of the `bsc` protocol (first
 // is primary).
-var ProtocolVersions = []uint{Bsc1, Bsc2}
+var ProtocolVersions = []uint{Oiz1, Oiz2}
 
 // protocolLengths are the number of implemented message corresponding to
 // different protocol versions.
-var protocolLengths = map[uint]uint64{Bsc1: 2, Bsc2: 4}
+var protocolLengths = map[uint]uint64{Oiz1: 2, Oiz2: 4}
 
 // maxMessageSize is the maximum cap on the size of a protocol message.
 const maxMessageSize = 10 * 1024 * 1024
 
 const (
-	BscCapMsg           = 0x00 // bsc capability msg used upon handshake
+	OizCapMsg           = 0x00 // oiz capability msg used upon handshake
 	VotesMsg            = 0x01
 	GetBlocksByRangeMsg = 0x02 // it can request (StartBlockHeight-Count, StartBlockHeight] range blocks from remote peer
 	BlocksByRangeMsg    = 0x03 // the replied blocks from remote peer
@@ -39,7 +39,7 @@ const (
 var defaultExtra = []byte{0x00}
 
 var (
-	errNoBscCapMsg             = errors.New("no bsc capability message")
+	errNoOizCapMsg             = errors.New("no oiz capability message")
 	errMsgTooLarge             = errors.New("message too long")
 	errDecode                  = errors.New("invalid message")
 	errInvalidMsgCode          = errors.New("invalid message code")
@@ -52,8 +52,8 @@ type Packet interface {
 	Kind() byte   // Kind returns the message type.
 }
 
-// BscCapPacket is the network packet for bsc capability message.
-type BscCapPacket struct {
+// OizCapPacket is the network packet for oiz capability message.
+type OizCapPacket struct {
 	ProtocolVersion uint
 	Extra           rlp.RawValue // for extension
 }
@@ -63,8 +63,8 @@ type VotesPacket struct {
 	Votes []*types.VoteEnvelope
 }
 
-func (*BscCapPacket) Name() string { return "BscCap" }
-func (*BscCapPacket) Kind() byte   { return BscCapMsg }
+func (*OizCapPacket) Name() string { return "OizCap" }
+func (*OizCapPacket) Kind() byte   { return OizCapMsg }
 
 func (*VotesPacket) Name() string { return "Votes" }
 func (*VotesPacket) Kind() byte   { return VotesMsg }

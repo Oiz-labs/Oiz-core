@@ -108,7 +108,7 @@ var (
 		utils.TxLookupLimitFlag, // deprecated
 		utils.TransactionHistoryFlag,
 		utils.BlockHistoryFlag,
-		// utils.ChainHistoryFlag, // disabled in bsc
+		// utils.ChainHistoryFlag, // disabled in oiz
 		utils.LogHistoryFlag,
 		utils.LogNoHistoryFlag,
 		utils.LogExportCheckpointsFlag,
@@ -266,7 +266,7 @@ func init() {
 		dumpCommand,
 		dumpGenesisCommand,
 		dumpRootHashCommand,
-		// pruneHistoryCommand, // disabled in bsc
+		// pruneHistoryCommand, // disabled in oiz
 		downloadEraCommand,
 		// See accountcmd.go:
 		accountCommand,
@@ -335,7 +335,7 @@ func prepare(ctx *cli.Context) {
 	// If we're running a known preset, log it for convenience.
 	switch {
 	case ctx.IsSet(utils.ChapelFlag.Name):
-		log.Info("Starting BSC on Chapel testnet...")
+		log.Info("Starting OIZ on Chapel testnet...")
 	}
 	// If we're a full node on mainnet without --cache specified, bump default cache allowance
 	if !ctx.IsSet(utils.CacheFlag.Name) && !ctx.IsSet(utils.NetworkIdFlag.Name) {

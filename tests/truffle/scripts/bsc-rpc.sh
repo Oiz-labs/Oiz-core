@@ -13,4 +13,4 @@ done
 geth --config ${DATA_DIR}/config.toml --datadir ${DATA_DIR} --netrestrict ${CLUSTER_CIDR} --nat extip:99.1.0.3 \
     --verbosity ${VERBOSE} --syncmode "full"\
     --rpc.allow-unprotected-txs --history.transactions 15768000 \
-    -unlock ${unlock_sequences} --password /dev/null  >${DATA_DIR}/bscnode-rpc.log
+    -unlock ${unlock_sequences} --password /dev/null  >${DATA_DIR}/oiznode-rpc.log

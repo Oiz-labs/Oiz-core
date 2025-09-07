@@ -27,7 +27,7 @@ func (c Config) MarshalTOML() (interface{}, error) {
 		HistoryMode             history.HistoryMode
 		EthDiscoveryURLs        []string
 		SnapDiscoveryURLs       []string
-		BscDiscoveryURLs        []string
+		OizDiscoveryURLs        []string
 		NoPruning               bool
 		NoPrefetch              bool
 		DirectBroadcast         bool
@@ -87,7 +87,7 @@ func (c Config) MarshalTOML() (interface{}, error) {
 	enc.HistoryMode = c.HistoryMode
 	enc.EthDiscoveryURLs = c.EthDiscoveryURLs
 	enc.SnapDiscoveryURLs = c.SnapDiscoveryURLs
-	enc.BscDiscoveryURLs = c.BscDiscoveryURLs
+	enc.OizDiscoveryURLs = c.OizDiscoveryURLs
 	enc.NoPruning = c.NoPruning
 	enc.NoPrefetch = c.NoPrefetch
 	enc.DirectBroadcast = c.DirectBroadcast
@@ -151,7 +151,7 @@ func (c *Config) UnmarshalTOML(unmarshal func(interface{}) error) error {
 		HistoryMode             *history.HistoryMode
 		EthDiscoveryURLs        []string
 		SnapDiscoveryURLs       []string
-		BscDiscoveryURLs        []string
+		OizDiscoveryURLs        []string
 		NoPruning               *bool
 		NoPrefetch              *bool
 		DirectBroadcast         *bool
@@ -232,8 +232,8 @@ func (c *Config) UnmarshalTOML(unmarshal func(interface{}) error) error {
 	if dec.SnapDiscoveryURLs != nil {
 		c.SnapDiscoveryURLs = dec.SnapDiscoveryURLs
 	}
-	if dec.BscDiscoveryURLs != nil {
-		c.BscDiscoveryURLs = dec.BscDiscoveryURLs
+	if dec.OizDiscoveryURLs != nil {
+		c.OizDiscoveryURLs = dec.OizDiscoveryURLs
 	}
 	if dec.NoPruning != nil {
 		c.NoPruning = *dec.NoPruning

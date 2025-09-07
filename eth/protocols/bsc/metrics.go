@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-package bsc
+package oiz
 
 import (
 	metrics "github.com/ethereum/go-ethereum/metrics"
 )
 
 var (
-	ingressRegistrationErrorName = "eth/protocols/bsc/ingress/registration/error"
-	egressRegistrationErrorName  = "eth/protocols/bsc/egress/registration/error"
+	ingressRegistrationErrorName = "eth/protocols/oiz/ingress/registration/error"
+	egressRegistrationErrorName  = "eth/protocols/oiz/egress/registration/error"
 
 	IngressRegistrationErrorMeter = metrics.NewRegisteredMeter(ingressRegistrationErrorName, nil)
 	EgressRegistrationErrorMeter  = metrics.NewRegisteredMeter(egressRegistrationErrorName, nil)

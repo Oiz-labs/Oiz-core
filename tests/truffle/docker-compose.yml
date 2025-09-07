@@ -1,6 +1,6 @@
 services:
   genesis:
-    image: bsc-genesis
+    image: oiz-genesis
     env_file: .env
     environment:
       NUMS_OF_VALIDATOR: 1
@@ -11,8 +11,8 @@ services:
       - ./init-holders:/root/init-holders
     command: /root/scripts/bootstrap.sh
   
-  bsc-rpc:
-    image: bsc
+  oiz-rpc:
+    image: oiz
     healthcheck:
       test: nc -z localhost 8545
       interval: 3s
@@ -20,26 +20,26 @@ services:
       retries: 15
     env_file: .env
     environment:
-      NODE_ID: bsc-rpc
+      NODE_ID: oiz-rpc
     volumes:
-      - ./storage/bsc-rpc:/root/.ethereum
+      - ./storage/oiz-rpc:/root/.ethereum
       - ./scripts:/scripts
       - ./config:/config
-    entrypoint: [ "sh", "-c", "/scripts/bsc-rpc.sh" ]
+    entrypoint: [ "sh", "-c", "/scripts/oiz-rpc.sh" ]
     networks:
       default:
         ipv4_address: 99.1.0.3
 
-  bsc-validator1:
-    image: bsc
+  oiz-validator1:
+    image: oiz
     env_file: .env
     environment:
-      NODE_ID: bsc-validator1
-      BOOTSTRAP_HOST: bsc-rpc
+      NODE_ID: oiz-validator1
+      BOOTSTRAP_HOST: oiz-rpc
     volumes:
-      - ./storage/bsc-validator1:/root/.ethereum
+      - ./storage/oiz-validator1:/root/.ethereum
       - ./scripts:/scripts
-    entrypoint: [ "sh", "-c", "/scripts/bsc-validator.sh" ]
+    entrypoint: [ "sh", "-c", "/scripts/oiz-validator.sh" ]
     networks:
       default:
         ipv4_address: 99.1.0.2
@@ -49,12 +49,12 @@ services:
     command: /scripts/truffle-test.sh
     env_file: .env
     environment:
-      RPC_HOST: bsc-rpc
+      RPC_HOST: oiz-rpc
       RPC_PORT: 8545
     volumes:
       - ./scripts:/scripts
     depends_on:
-      bsc-rpc:
+      oiz-rpc:
         condition: service_healthy
 
 networks:

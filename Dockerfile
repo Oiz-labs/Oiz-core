@@ -22,12 +22,12 @@ RUN cd /go-ethereum && go run build/ci.go install -static ./cmd/geth
 # Pull Geth into a second stage deploy alpine container
 FROM alpine:3.21
 
-ARG BSC_USER=bsc
-ARG BSC_USER_UID=1000
-ARG BSC_USER_GID=1000
+ARG OIZ_USER=oiz
+ARG OIZ_USER_UID=1000
+ARG OIZ_USER_GID=1000
 
-ENV BSC_HOME=/bsc
-ENV HOME=${BSC_HOME}
+ENV OIZ_HOME=/oiz
+ENV HOME=${OIZ_HOME}
 ENV DATA_DIR=/data
 
 ENV PACKAGES ca-certificates jq \
@@ -36,14 +36,14 @@ ENV PACKAGES ca-certificates jq \
 
 RUN apk add --no-cache $PACKAGES \
   && rm -rf /var/cache/apk/* \
-  && addgroup -g ${BSC_USER_GID} ${BSC_USER} \
-  && adduser -u ${BSC_USER_UID} -G ${BSC_USER} --shell /sbin/nologin --no-create-home -D ${BSC_USER} \
-  && addgroup ${BSC_USER} tty \
+  && addgroup -g ${OIZ_USER_GID} ${OIZ_USER} \
+  && adduser -u ${OIZ_USER_UID} -G ${OIZ_USER} --shell /sbin/nologin --no-create-home -D ${OIZ_USER} \
+  && addgroup ${OIZ_USER} tty \
   && sed -i -e "s/bin\/sh/bin\/bash/" /etc/passwd  
 
 RUN echo "[ ! -z \"\$TERM\" -a -r /etc/motd ] && cat /etc/motd" >> /etc/bash/bashrc
 
-WORKDIR ${BSC_HOME}
+WORKDIR ${OIZ_HOME}
 
 COPY --from=builder /go-ethereum/build/bin/geth /usr/local/bin/
 
@@ -51,11 +51,11 @@ COPY docker-entrypoint.sh ./
 
 RUN chmod +x docker-entrypoint.sh \
     && mkdir -p ${DATA_DIR} \
-    && chown -R ${BSC_USER_UID}:${BSC_USER_GID} ${BSC_HOME} ${DATA_DIR}
+    && chown -R ${OIZ_USER_UID}:${OIZ_USER_GID} ${OIZ_HOME} ${DATA_DIR}
 
 VOLUME ${DATA_DIR}
 
-USER ${BSC_USER_UID}:${BSC_USER_GID}
+USER ${OIZ_USER_UID}:${OIZ_USER_GID}
 
 # rpc ws graphql
 EXPOSE 8545 8546 8547 30303 30303/udp

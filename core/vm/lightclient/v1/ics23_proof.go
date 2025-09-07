@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/bnb-chain/ics23"
+	"github.com/oiz-labs/ics23"
 	"github.com/tendermint/tendermint/crypto/merkle"
 )
 

@@ -37,8 +37,8 @@ function init_genesis_data() {
      node_id=$2
      geth --datadir ${workspace}/storage/${node_id} init ${workspace}/genesis/genesis.json
      cp ${workspace}/config/config-${node_type}.toml  ${workspace}/storage/${node_id}/config.toml
-     sed -i -e "s/{{NetworkId}}/${BSC_CHAIN_ID}/g" ${workspace}/storage/${node_id}/config.toml
-     if [ "${node_id}" == "bsc-rpc" ]; then
+     sed -i -e "s/{{NetworkId}}/${OIZ_CHAIN_ID}/g" ${workspace}/storage/${node_id}/config.toml
+     if [ "${node_id}" == "oiz-rpc" ]; then
           cp ${workspace}/init-holders/* ${workspace}/storage/${node_id}/keystore
           cp ${workspace}/genesis/genesis.json ${workspace}/storage/${node_id}
      fi
@@ -60,22 +60,22 @@ prepare
 NUMS_OF_VALIDATOR=1
 # Step 1, generate config for each validator
 for((i=1;i<=${NUMS_OF_VALIDATOR};i++)); do
-     init_validator "bsc-validator${i}"
+     init_validator "oiz-validator${i}"
 done
 
 # Step 2, use validator configs to generate genesis file
 #generate_genesis
 
 # Step 3, use genesis file to init cluster data
-init_genesis_data bsc-rpc bsc-rpc
+init_genesis_data oiz-rpc oiz-rpc
 
 for((i=1;i<=${NUMS_OF_VALIDATOR};i++)); do
-     init_genesis_data validator "bsc-validator${i}"
+     init_genesis_data validator "oiz-validator${i}"
 done
 
 #Step 4, prepare bls wallet, used by fast finality vote
-prepareBLSWallet bsc-rpc
+prepareBLSWallet oiz-rpc
 
 for((i=1;i<=${NUMS_OF_VALIDATOR};i++)); do
-     prepareBLSWallet "bsc-validator${i}"
+     prepareBLSWallet "oiz-validator${i}"
 done

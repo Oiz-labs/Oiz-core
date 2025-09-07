@@ -10,8 +10,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.18.45
 	github.com/aws/aws-sdk-go-v2/credentials v1.13.43
 	github.com/aws/aws-sdk-go-v2/service/route53 v1.30.2
-	github.com/bnb-chain/fastssz v0.1.2
-	github.com/bnb-chain/ics23 v0.1.0
+	github.com/oiz-labs/fastssz v0.1.2
+	github.com/oiz-labs/ics23 v0.1.0
 	github.com/cespare/cp v1.1.1
 	github.com/cloudflare/cloudflare-go v0.114.0
 	github.com/cockroachdb/pebble v1.1.5
@@ -321,6 +321,6 @@ require (
 )
 
 replace (
-	github.com/cometbft/cometbft => github.com/bnb-chain/greenfield-cometbft v1.3.2
-	github.com/tendermint/tendermint => github.com/bnb-chain/tendermint v0.31.17
+	github.com/cometbft/cometbft => github.com/oiz-labs/greenfield-cometbft v1.3.2
+	github.com/tendermint/tendermint => github.com/oiz-labs/tendermint v0.31.17
 )

@@ -8,30 +8,30 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/eth/protocols/bsc"
+	"github.com/ethereum/go-ethereum/eth/protocols/oiz"
 	"github.com/ethereum/go-ethereum/eth/protocols/eth"
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/p2p"
 	"github.com/ethereum/go-ethereum/p2p/enode"
 )
 
-type testBscHandler struct {
+type testOizHandler struct {
 	voteBroadcasts event.Feed
 }
 
-func (h *testBscHandler) Chain() *core.BlockChain { panic("no backing chain") }
-func (h *testBscHandler) RunPeer(peer *bsc.Peer, handler bsc.Handler) error {
+func (h *testOizHandler) Chain() *core.BlockChain { panic("no backing chain") }
+func (h *testOizHandler) RunPeer(peer *oiz.Peer, handler oiz.Handler) error {
 	panic("not used in tests")
 }
-func (h *testBscHandler) PeerInfo(enode.ID) interface{} { panic("not used in tests") }
-func (h *testBscHandler) Handle(peer *bsc.Peer, packet bsc.Packet) error {
+func (h *testOizHandler) PeerInfo(enode.ID) interface{} { panic("not used in tests") }
+func (h *testOizHandler) Handle(peer *oiz.Peer, packet oiz.Packet) error {
 	switch packet := packet.(type) {
-	case *bsc.VotesPacket:
+	case *oiz.VotesPacket:
 		h.voteBroadcasts.Send(packet.Votes)
 		return nil
 
 	default:
-		panic(fmt.Sprintf("unexpected bsc packet type in tests: %T", packet))
+		panic(fmt.Sprintf("unexpected oiz packet type in tests: %T", packet))
 	}
 }
 
@@ -67,8 +67,8 @@ func testSendVotes(t *testing.T, protocol uint) {
 			Version: eth.ETH68,
 		},
 		{
-			Name:    "bsc",
-			Version: bsc.Bsc1,
+			Name:    "oiz",
+			Version: oiz.Oiz1,
 		},
 	}
 	caps := []p2p.Cap{
@@ -77,8 +77,8 @@ func testSendVotes(t *testing.T, protocol uint) {
 			Version: eth.ETH68,
 		},
 		{
-			Name:    "bsc",
-			Version: bsc.Bsc1,
+			Name:    "oiz",
+			Version: oiz.Oiz1,
 		},
 	}
 
@@ -92,23 +92,23 @@ func testSendVotes(t *testing.T, protocol uint) {
 	defer localEth.Close()
 	defer remoteEth.Close()
 
-	p2pBscSrc, p2pBscSink := p2p.MsgPipe()
-	defer p2pBscSrc.Close()
-	defer p2pBscSink.Close()
+	p2pOizSrc, p2pOizSink := p2p.MsgPipe()
+	defer p2pOizSrc.Close()
+	defer p2pOizSink.Close()
 
-	localBsc := bsc.NewPeer(bsc.Bsc1, p2p.NewPeerWithProtocols(enode.ID{1}, protos, "", caps), p2pBscSrc)
-	remoteBsc := bsc.NewPeer(bsc.Bsc1, p2p.NewPeerWithProtocols(enode.ID{3}, protos, "", caps), p2pBscSink)
-	defer localBsc.Close()
-	defer remoteBsc.Close()
+	localOiz := oiz.NewPeer(oiz.Oiz1, p2p.NewPeerWithProtocols(enode.ID{1}, protos, "", caps), p2pOizSrc)
+	remoteOiz := oiz.NewPeer(oiz.Oiz1, p2p.NewPeerWithProtocols(enode.ID{3}, protos, "", caps), p2pOizSink)
+	defer localOiz.Close()
+	defer remoteOiz.Close()
 
-	go func(p *bsc.Peer) {
-		(*bscHandler)(handler.handler).RunPeer(p, func(peer *bsc.Peer) error {
-			return bsc.Handle((*bscHandler)(handler.handler), peer)
+	go func(p *oiz.Peer) {
+		(*oizHandler)(handler.handler).RunPeer(p, func(peer *oiz.Peer) error {
+			return oiz.Handle((*oizHandler)(handler.handler), peer)
 		})
-	}(localBsc)
+	}(localOiz)
 
 	time.Sleep(200 * time.Millisecond)
-	remoteBsc.Handshake()
+	remoteOiz.Handshake()
 
 	time.Sleep(200 * time.Millisecond)
 	go func(p *eth.Peer) {
@@ -128,12 +128,12 @@ func testSendVotes(t *testing.T, protocol uint) {
 	}
 	// After the handshake completes, the source handler should stream the sink
 	// the votes, subscribe to all inbound network events
-	backend := new(testBscHandler)
+	backend := new(testOizHandler)
 	bcasts := make(chan []*types.VoteEnvelope)
 	bcastSub := backend.voteBroadcasts.Subscribe(bcasts)
 	defer bcastSub.Unsubscribe()
 
-	go bsc.Handle(backend, remoteBsc)
+	go oiz.Handle(backend, remoteOiz)
 
 	// Make sure we get all the votes on the correct channels
 	seen := make(map[common.Hash]struct{})
@@ -168,8 +168,8 @@ func testRecvVotes(t *testing.T, protocol uint) {
 			Version: eth.ETH68,
 		},
 		{
-			Name:    "bsc",
-			Version: bsc.Bsc1,
+			Name:    "oiz",
+			Version: oiz.Oiz1,
 		},
 	}
 	caps := []p2p.Cap{
@@ -178,8 +178,8 @@ func testRecvVotes(t *testing.T, protocol uint) {
 			Version: eth.ETH68,
 		},
 		{
-			Name:    "bsc",
-			Version: bsc.Bsc1,
+			Name:    "oiz",
+			Version: oiz.Oiz1,
 		},
 	}
 
@@ -193,23 +193,23 @@ func testRecvVotes(t *testing.T, protocol uint) {
 	defer localEth.Close()
 	defer remoteEth.Close()
 
-	p2pBscSrc, p2pBscSink := p2p.MsgPipe()
-	defer p2pBscSrc.Close()
-	defer p2pBscSink.Close()
+	p2pOizSrc, p2pOizSink := p2p.MsgPipe()
+	defer p2pOizSrc.Close()
+	defer p2pOizSink.Close()
 
-	localBsc := bsc.NewPeer(bsc.Bsc1, p2p.NewPeerWithProtocols(enode.ID{1}, protos, "", caps), p2pBscSrc)
-	remoteBsc := bsc.NewPeer(bsc.Bsc1, p2p.NewPeerWithProtocols(enode.ID{3}, protos, "", caps), p2pBscSink)
-	defer localBsc.Close()
-	defer remoteBsc.Close()
+	localOiz := oiz.NewPeer(oiz.Oiz1, p2p.NewPeerWithProtocols(enode.ID{1}, protos, "", caps), p2pOizSrc)
+	remoteOiz := oiz.NewPeer(oiz.Oiz1, p2p.NewPeerWithProtocols(enode.ID{3}, protos, "", caps), p2pOizSink)
+	defer localOiz.Close()
+	defer remoteOiz.Close()
 
-	go func(p *bsc.Peer) {
-		(*bscHandler)(handler.handler).RunPeer(p, func(peer *bsc.Peer) error {
-			return bsc.Handle((*bscHandler)(handler.handler), peer)
+	go func(p *oiz.Peer) {
+		(*oizHandler)(handler.handler).RunPeer(p, func(peer *oiz.Peer) error {
+			return oiz.Handle((*oizHandler)(handler.handler), peer)
 		})
-	}(localBsc)
+	}(localOiz)
 
 	time.Sleep(200 * time.Millisecond)
-	remoteBsc.Handshake()
+	remoteOiz.Handshake()
 
 	time.Sleep(200 * time.Millisecond)
 	go func(p *eth.Peer) {
@@ -243,7 +243,7 @@ func testRecvVotes(t *testing.T, protocol uint) {
 		},
 	}
 
-	remoteBsc.AsyncSendVotes([]*types.VoteEnvelope{&vote})
+	remoteOiz.AsyncSendVotes([]*types.VoteEnvelope{&vote})
 	time.Sleep(100 * time.Millisecond)
 	select {
 	case event := <-votesCh:

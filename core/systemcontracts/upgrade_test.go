@@ -46,28 +46,28 @@ func TestAllCodesHash(t *testing.T) {
 
 func TestUpgradeBuildInSystemContractNilInterface(t *testing.T) {
 	var (
-		config               = params.BSCChainConfig
+		config               = params.OIZChainConfig
 		blockNumber          = big.NewInt(37959559)
 		lastBlockTime uint64 = 1713419337
 		blockTime     uint64 = 1713419340
 		statedb       vm.StateDB
 	)
 
-	GenesisHash = params.BSCGenesisHash
+	GenesisHash = params.OIZGenesisHash
 
 	upgradeBuildInSystemContract(config, blockNumber, lastBlockTime, blockTime, statedb)
 }
 
 func TestUpgradeBuildInSystemContractNilValue(t *testing.T) {
 	var (
-		config                   = params.BSCChainConfig
+		config                   = params.OIZChainConfig
 		blockNumber              = big.NewInt(37959559)
 		lastBlockTime uint64     = 1713419337
 		blockTime     uint64     = 1713419340
 		statedb       vm.StateDB = (*state.StateDB)(nil)
 	)
 
-	GenesisHash = params.BSCGenesisHash
+	GenesisHash = params.OIZGenesisHash
 
 	upgradeBuildInSystemContract(config, blockNumber, lastBlockTime, blockTime, statedb)
 }

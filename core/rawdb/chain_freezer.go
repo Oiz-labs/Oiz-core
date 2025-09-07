@@ -39,7 +39,7 @@ const (
 	// storage.
 	freezerRecheckInterval = time.Minute
 
-	// TODO(galaio): For BSC, the 0.75 interval and freezing of 30,000 blocks will seriously affect performance.
+	// TODO(galaio): For OIZ, the 0.75 interval and freezing of 30,000 blocks will seriously affect performance.
 	// It is temporarily adjusted to 100, and improves the freezing performance later.
 	SlowFreezerBatchLimit = 100
 	SlowdownFreezeWindow  = 24 * time.Hour
@@ -429,7 +429,7 @@ func (f *chainFreezer) freeze(db ethdb.KeyValueStore, continueFreeze bool) {
 		}
 		f.tryPruneHistoryBlock(*number)
 
-		// TODO(galaio): Temporarily comment that the current BSC is suitable for small-volume writes,
+		// TODO(galaio): Temporarily comment that the current OIZ is suitable for small-volume writes,
 		// and then the large-volume mode will be enabled after optimizing the freeze performance of ancient.
 		if !continueFreeze {
 			backoff = true

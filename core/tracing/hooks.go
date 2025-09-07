@@ -313,14 +313,14 @@ const (
 	// It is only emitted when the tracer has opted in to use the journaling wrapper (WrapWithJournal).
 	BalanceChangeRevert BalanceChangeReason = 15
 
-	// BSC specific balance changes
+	// BS specific balance changes
 
-	// BalanceDecreaseBSCDistributeReward is a balance change that decreases system address' balance and happens
-	// when BSC is distributing rewards to validator.
-	BalanceDecreaseBSCDistributeReward BalanceChangeReason = 210
-	// BalanceIncreaseBSCDistributeReward is a balance change that increases the block validator's balance and
-	// happens when BSC is distributing rewards to validator.
-	BalanceIncreaseBSCDistributeReward BalanceChangeReason = 211
+	// BalanceDecreaseOIZDistributeReward is a balance change that decreases system address' balance and happens
+	// when OIZ is distributing rewards to validator.
+	BalanceDecreaseOIZDistributeReward BalanceChangeReason = 210
+	// BalanceIncreaseOIZDistributeReward is a balance change that increases the block validator's balance and
+	// happens when OIZ is distributing rewards to validator.
+	BalanceIncreaseOIZDistributeReward BalanceChangeReason = 211
 )
 
 // GasChangeReason is used to indicate the reason for a gas change, useful

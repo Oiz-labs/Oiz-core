@@ -38,13 +38,13 @@ test: all
 
 #? truffle-test: Run the integration test.
 truffle-test:
-	rm -rf ./tests/truffle/storage/bsc-validator1
-	rm -rf ./tests/truffle/storage/bsc-rpc
-	docker build . -f ./docker/Dockerfile --target bsc -t bsc
-	docker build . -f ./docker/Dockerfile --target bsc-genesis -t bsc-genesis
+	rm -rf ./tests/truffle/storage/oiz-validator1
+	rm -rf ./tests/truffle/storage/oiz-rpc
+	docker build . -f ./docker/Dockerfile --target oiz -t oiz
+	docker build . -f ./docker/Dockerfile --target oiz-genesis -t oiz-genesis
 	docker build . -f ./docker/Dockerfile.truffle -t truffle-test
 	docker compose -f ./tests/truffle/docker-compose.yml up genesis
-	docker compose -f ./tests/truffle/docker-compose.yml up -d bsc-rpc bsc-validator1
+	docker compose -f ./tests/truffle/docker-compose.yml up -d oiz-rpc oiz-validator1
 	sleep 60
 	docker compose -f ./tests/truffle/docker-compose.yml up --exit-code-from truffle-test truffle-test
 	docker compose -f ./tests/truffle/docker-compose.yml down
@@ -76,7 +76,7 @@ devtools:
 
 #? help: Build docker image
 docker:
-	docker build --pull -t bnb-chain/bsc:latest -f Dockerfile .
+	docker build --pull -t oiz-chain/oiz-core:latest -f Dockerfile .
 
 #? help: Get more info on make commands.
 help: Makefile

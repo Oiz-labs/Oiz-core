@@ -1,4 +1,4 @@
-package bsc
+package oiz
 
 import (
 	"fmt"
@@ -84,11 +84,11 @@ type Decoder interface {
 	Decode(val interface{}) error
 }
 
-var bsc1 = map[uint64]msgHandler{
+var oiz1 = map[uint64]msgHandler{
 	VotesMsg: handleVotes,
 }
 
-var bsc2 = map[uint64]msgHandler{
+var oiz2 = map[uint64]msgHandler{
 	VotesMsg:            handleVotes,
 	GetBlocksByRangeMsg: handleGetBlocksByRange,
 	BlocksByRangeMsg:    handleBlocksByRange,
@@ -108,9 +108,9 @@ func handleMessage(backend Backend, peer *Peer) error {
 	}
 	defer msg.Discard()
 
-	var handlers = bsc1
-	if peer.Version() >= Bsc2 {
-		handlers = bsc2
+	var handlers = oiz1
+	if peer.Version() >= Oiz2 {
+		handlers = oiz2
 	}
 
 	// Track the amount of time it takes to serve the request and run the handler

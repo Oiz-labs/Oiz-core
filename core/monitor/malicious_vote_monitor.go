@@ -43,7 +43,7 @@ func (m *MaliciousVoteMonitor) ConflictDetect(newVote *types.VoteEnvelope, pendi
 	sourceNumber, targetNumber := newVote.Data.SourceNumber, newVote.Data.TargetNumber
 
 	//Basic check
-	// refer to https://github.com/bnb-chain/bsc-genesis-contract/blob/master/contracts/SlashIndicator.sol#LL207C4-L207C4
+	// refer to https://github.com/oiz-labs/oiz-core-genesis-contract/blob/master/contracts/SlashIndicator.sol#LL207C4-L207C4
 	if !(targetNumber+maliciousVoteSlashScope > pendingBlockNumber) {
 		return false
 	}

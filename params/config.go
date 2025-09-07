@@ -30,7 +30,7 @@ import (
 var (
 	MainnetGenesisHash = common.HexToHash("0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3")
 
-	BSCGenesisHash    = common.HexToHash("0x0d21840abff46b96c84b2ac9e10e4f5cdaeb5693cb665db62a2f3b02d2d57b5b")
+	OIZGenesisHash    = common.HexToHash("0x0d21840abff46b96c84b2ac9e10e4f5cdaeb5693cb665db62a2f3b02d2d57b5b")
 	ChapelGenesisHash = common.HexToHash("0x6d3c66c5357ec91d5c43af47e234a939b22557cbb552dc45bebbceeed90fbe34")
 	RialtoGenesisHash = common.HexToHash("0xee835a629f9cf5510b48b6ba41d69e0ff7d6ef10f977166ef939db41f59f5501")
 )
@@ -187,7 +187,7 @@ var (
 		},
 	}
 
-	BSCChainConfig = &ChainConfig{
+	OIZChainConfig = &ChainConfig{
 		ChainID:             big.NewInt(56),
 		HomesteadBlock:      big.NewInt(0),
 		EIP150Block:         big.NewInt(0),
@@ -230,7 +230,7 @@ var (
 		Parlia: &ParliaConfig{},
 		BlobScheduleConfig: &BlobScheduleConfig{
 			Cancun: DefaultCancunBlobConfig,
-			Prague: DefaultPragueBlobConfigBSC,
+			Prague: DefaultPragueBlobConfigOIZ,
 		},
 	}
 
@@ -277,11 +277,11 @@ var (
 		Parlia: &ParliaConfig{},
 		BlobScheduleConfig: &BlobScheduleConfig{
 			Cancun: DefaultCancunBlobConfig,
-			Prague: DefaultPragueBlobConfigBSC,
+			Prague: DefaultPragueBlobConfigOIZ,
 		},
 	}
 
-	// used to test hard fork upgrade, following https://github.com/bnb-chain/bsc-genesis-contract/blob/master/genesis.json
+	// used to test hard fork upgrade, following https://github.com/oiz-labs/oiz-core-genesis-contract/blob/master/genesis.json
 	RialtoChainConfig = &ChainConfig{
 		ChainID:             big.NewInt(714),
 		HomesteadBlock:      big.NewInt(0),
@@ -326,7 +326,7 @@ var (
 		Parlia: &ParliaConfig{},
 		BlobScheduleConfig: &BlobScheduleConfig{
 			Cancun: DefaultCancunBlobConfig,
-			Prague: DefaultPragueBlobConfigBSC,
+			Prague: DefaultPragueBlobConfigOIZ,
 		},
 	}
 
@@ -554,8 +554,8 @@ func GetBuiltInChainConfig(ghash common.Hash) *ChainConfig {
 	switch ghash {
 	case MainnetGenesisHash:
 		return MainnetChainConfig
-	case BSCGenesisHash:
-		return BSCChainConfig
+	case OIZGenesisHash:
+		return OIZChainConfig
 	case ChapelGenesisHash:
 		return ChapelChainConfig
 	case RialtoGenesisHash:
@@ -591,13 +591,13 @@ var (
 		Osaka:  DefaultOsakaBlobConfig,
 	}
 
-	DefaultPragueBlobConfigBSC = DefaultCancunBlobConfig
+	DefaultPragueBlobConfigOIZ = DefaultCancunBlobConfig
 )
 
 // NetworkNames are user friendly names to use in the chain spec banner.
 var NetworkNames = map[string]string{
 	MainnetChainConfig.ChainID.String(): "mainnet",
-	BSCChainConfig.ChainID.String():     "bsc",
+	OIZChainConfig.ChainID.String():     "oiz",
 	ChapelChainConfig.ChainID.String():  "chapel",
 	RialtoChainConfig.ChainID.String():  "rialto",
 }
@@ -1402,18 +1402,18 @@ func (c *ChainConfig) CheckConfigForkOrder() error {
 	}
 
 	// Check that all forks with blobs explicitly define the blob schedule configuration.
-	bsc := c.BlobScheduleConfig
-	if bsc == nil {
-		bsc = new(BlobScheduleConfig)
+	oiz := c.BlobScheduleConfig
+	if oiz == nil {
+		oiz = new(BlobScheduleConfig)
 	}
 	for _, cur := range []struct {
 		name      string
 		timestamp *uint64
 		config    *BlobConfig
 	}{
-		{name: "cancun", timestamp: c.CancunTime, config: bsc.Cancun},
-		{name: "prague", timestamp: c.PragueTime, config: bsc.Prague},
-		{name: "osaka", timestamp: c.OsakaTime, config: bsc.Osaka},
+		{name: "cancun", timestamp: c.CancunTime, config: oiz.Cancun},
+		{name: "prague", timestamp: c.PragueTime, config: oiz.Prague},
+		{name: "osaka", timestamp: c.OsakaTime, config: oiz.Osaka},
 	} {
 		if cur.config != nil {
 			if err := cur.config.validate(); err != nil {

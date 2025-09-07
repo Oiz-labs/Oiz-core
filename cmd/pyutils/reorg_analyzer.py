@@ -1,9 +1,9 @@
 # Example commands: (You can either given path to the directory which has all the .log files or just one .log file name)
 # python reorg_analyzer.py /path/to/logs_directory 
 # or
-# python reorg_analyzer.py bsc.log
+# python reorg_analyzer.py oiz.log
 # or 
-# python reorg_analyzer.py bsc.log.2024-10-3*
+# python reorg_analyzer.py oiz.log.2024-10-3*
 import re
 import os
 import argparse
@@ -14,7 +14,7 @@ validator_addr2monikey = {
     "0x37e9627A91DD13e453246856D58797Ad6583D762": "LegendII",
     "0xB4647b856CB9C3856d559C885Bed8B43e0846a47": "CertiK",
     "0x75B851a27D7101438F45fce31816501193239A83": "Figment",
-    "0x502aECFE253E6AA0e8D2A06E12438FFeD0Fe16a0": "BscScan",
+    "0x502aECFE253E6AA0e8D2A06E12438FFeD0Fe16a0": "OizScan",
     "0xCa503a7eD99eca485da2E875aedf7758472c378C": "InfStones",
     "0x5009317FD4F6F8FeEa9dAe41E5F0a4737BB7A7D5": "NodeReal",
     "0x1cFDBd2dFf70C6e2e30df5012726F87731F38164": "Tranchess",
@@ -26,7 +26,7 @@ validator_addr2monikey = {
     "0x58567F7A51a58708C8B40ec592A38bA64C0697De": "Legend",
     "0x460A252B4fEEFA821d3351731220627D7B7d1F3d": "Defibit",
     "0x8A239732871AdC8829EA2f47e94087C5FBad47b6": "The48Club",
-    "0xD3b0d838cCCEAe7ebF1781D11D1bB741DB7Fe1A7": "BNBEve",
+    "0xD3b0d838cCCEAe7ebF1781D11D1bB741DB7Fe1A7": "OIZEve",
     "0xF8B99643fAfC79d9404DE68E48C4D49a3936f787": "Avengers",
     "0x4e5acf9684652BEa56F2f01b7101a225Ee33d23f": "HashKey",
     "0x9bb56C2B4DBE5a06d79911C9899B6f817696ACFc": "Feynman",
@@ -175,7 +175,7 @@ def get_log_files(paths):
     return log_files
 
 def main():
-    parser = argparse.ArgumentParser(description='Analyze BSC node logs for reorgs.')
+    parser = argparse.ArgumentParser(description='Analyze OIZ node logs for reorgs.')
     parser.add_argument('paths', nargs='+', help='Path(s) to log files, directories, or patterns.')
     args = parser.parse_args()
 

@@ -49,7 +49,7 @@ func (h *handler) syncTransactions(p *eth.Peer) {
 }
 
 // syncVotes starts sending all currently pending votes to the given peer.
-func (h *handler) syncVotes(p *bscPeer) {
+func (h *handler) syncVotes(p *oizPeer) {
 	votes := h.votepool.GetVotes()
 	if len(votes) == 0 {
 		return
@@ -184,7 +184,7 @@ func (cs *chainSyncer) nextSyncOp() *chainSyncOp {
 		// 		log.Info("Disable transaction acceptance randomly for the delay exceeding 10 blocks.")
 		// 	}
 	} else if op.td.Cmp(new(big.Int).Add(ourTD, common.Big2)) <= 0 { // common.Big2: difficulty of an in-turn block
-		// On BSC, blocks are produced much faster than on Ethereum.
+		// On OIZ, blocks are produced much faster than on Ethereum.
 		// If the node is only slightly behind (e.g., 1 block), syncing is unnecessary.
 		// It's likely still processing broadcasted blocks or block hash announcements.
 		// In most cases, the node will catch up within 3 seconds.

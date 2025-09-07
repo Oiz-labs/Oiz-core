@@ -12,7 +12,7 @@ services:
     volumes:
       - data:/data
 
-  bsc:
+  oiz:
     build:
       context: .
       dockerfile: Dockerfile
@@ -37,7 +37,7 @@ services:
       timeout: 3s
     volumes:
       - data:/data
-      - config:/bsc/config
+      - config:/oiz/config
 
 volumes:
   config:
@@ -45,10 +45,10 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/tmp/bsc/config/mainnet'
+      device: '/tmp/oiz/config/mainnet'
   data:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/tmp/bsc/data/mainnet'
+      device: '/tmp/oiz/data/mainnet'

@@ -1,4 +1,4 @@
-package bsc
+package oiz
 
 import (
 	"bytes"
@@ -10,8 +10,8 @@ import (
 	"github.com/ethereum/go-ethereum/rlp"
 )
 
-// TestBsc1Messages tests the encoding of defined Bsc1 messages
-func TestBsc1Messages(t *testing.T) {
+// TestOiz1Messages tests the encoding of defined Oiz1 messages
+func TestOiz1Messages(t *testing.T) {
 	var (
 		BLSPublicKey = "b32d4d46a7127dcc865f0d30f2ee3dcd5983b686f4e3a9202afc8b608652001c9938906ae1ff1417486096e32511f1bc"
 		voteDataSet  = []types.VoteData{

@@ -56,7 +56,7 @@ var (
 	genesisFlag       = flag.String("genesis", "", "Genesis json file to seed the chain with")
 	apiPortFlag       = flag.Int("apiport", 8080, "Listener port for the HTTP API connection")
 	wsEndpoint        = flag.String("ws", "http://127.0.0.1:7777/", "Url to ws endpoint")
-	wsEndpointMainnet = flag.String("ws.mainnet", "", "Url to ws endpoint of BSC mainnet")
+	wsEndpointMainnet = flag.String("ws.mainnet", "", "Url to ws endpoint of OIZ mainnet")
 
 	netnameFlag = flag.String("faucet.name", "", "Network name to assign to the faucet")
 	payoutFlag  = flag.Int("faucet.amount", 1, "Number of Ethers to pay out per user request")
@@ -72,9 +72,9 @@ var (
 	noauthFlag = flag.Bool("noauth", false, "Enables funding requests without authentication")
 	logFlag    = flag.Int("loglevel", 3, "Log level to use for Ethereum and the faucet")
 
-	bep2eContracts     = flag.String("bep2eContracts", "", "the list of bep2p contracts")
-	bep2eSymbols       = flag.String("bep2eSymbols", "", "the symbol of bep2p tokens")
-	bep2eAmounts       = flag.String("bep2eAmounts", "", "the amount of bep2p tokens")
+	oiz2eContracts     = flag.String("oiz2eContracts", "", "the list of oiz2p contracts")
+	oiz2eSymbols       = flag.String("oiz2eSymbols", "", "the symbol of oiz2p tokens")
+	oiz2eAmounts       = flag.String("oiz2eAmounts", "", "the amount of oiz2p tokens")
 	fixGasPrice        = flag.Int64("faucet.fixedprice", 0, "Will use fixed gas price if specified")
 	twitterTokenFlag   = flag.String("twitter.token", "", "Bearer token to authenticate with the v2 Twitter API")
 	twitterTokenV1Flag = flag.String("twitter.token.v1", "", "Bearer token to authenticate with the v1.1 Twitter API")
@@ -83,12 +83,12 @@ var (
 	resendBatchSize   = 3
 	resendMaxGasPrice = big.NewInt(50 * params.GWei)
 	wsReadTimeout     = 5 * time.Minute
-	minMainnetBalance = big.NewInt(2 * 1e6 * params.GWei) // 0.002 bnb
+	minMainnetBalance = big.NewInt(2 * 1e6 * params.GWei) // 0.002 oiz
 )
 
 var (
 	ether        = new(big.Int).Exp(big.NewInt(10), big.NewInt(18), nil)
-	bep2eAbiJson = `[ { "anonymous": false, "inputs": [ { "indexed": true, "internalType": "address", "name": "owner", "type": "address" }, { "indexed": true, "internalType": "address", "name": "spender", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "value", "type": "uint256" } ], "name": "Approval", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": true, "internalType": "address", "name": "from", "type": "address" }, { "indexed": true, "internalType": "address", "name": "to", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "value", "type": "uint256" } ], "name": "Transfer", "type": "event" }, { "inputs": [], "name": "totalSupply", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "decimals", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "symbol", "outputs": [ { "internalType": "string", "name": "", "type": "string" } ], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "getOwner", "outputs": [ { "internalType": "address", "name": "", "type": "address" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "account", "type": "address" } ], "name": "balanceOf", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "recipient", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" } ], "name": "transfer", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "_owner", "type": "address" }, { "internalType": "address", "name": "spender", "type": "address" } ], "name": "allowance", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "spender", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" } ], "name": "approve", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "sender", "type": "address" }, { "internalType": "address", "name": "recipient", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" } ], "name": "transferFrom", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "nonpayable", "type": "function" } ]`
+	oiz2eAbiJson = `[ { "anonymous": false, "inputs": [ { "indexed": true, "internalType": "address", "name": "owner", "type": "address" }, { "indexed": true, "internalType": "address", "name": "spender", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "value", "type": "uint256" } ], "name": "Approval", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": true, "internalType": "address", "name": "from", "type": "address" }, { "indexed": true, "internalType": "address", "name": "to", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "value", "type": "uint256" } ], "name": "Transfer", "type": "event" }, { "inputs": [], "name": "totalSupply", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "decimals", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "symbol", "outputs": [ { "internalType": "string", "name": "", "type": "string" } ], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "getOwner", "outputs": [ { "internalType": "address", "name": "", "type": "address" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "account", "type": "address" } ], "name": "balanceOf", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "recipient", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" } ], "name": "transfer", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "_owner", "type": "address" }, { "internalType": "address", "name": "spender", "type": "address" } ], "name": "allowance", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "spender", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" } ], "name": "approve", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [ { "internalType": "address", "name": "sender", "type": "address" }, { "internalType": "address", "name": "recipient", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" } ], "name": "transferFrom", "outputs": [ { "internalType": "bool", "name": "", "type": "bool" } ], "stateMutability": "nonpayable", "type": "function" } ]`
 )
 
 //go:embed faucet.html
@@ -110,39 +110,39 @@ func main() {
 	for i := 0; i < *tiersFlag; i++ {
 		// Calculate the amount for the next tier and format it
 		amount := float64(*payoutFlag) * math.Pow(2.5, float64(i))
-		amounts[i] = fmt.Sprintf("0.%s BNBs", strconv.FormatFloat(amount, 'f', -1, 64))
+		amounts[i] = fmt.Sprintf("0.%s OIZs", strconv.FormatFloat(amount, 'f', -1, 64))
 		if amount == 1 {
 			amounts[i] = strings.TrimSuffix(amounts[i], "s")
 		}
 	}
-	bep2eNumAmounts := make([]string, 0)
-	if bep2eAmounts != nil && len(*bep2eAmounts) > 0 {
-		bep2eNumAmounts = strings.Split(*bep2eAmounts, ",")
+	oiz2eNumAmounts := make([]string, 0)
+	if oiz2eAmounts != nil && len(*oiz2eAmounts) > 0 {
+		oiz2eNumAmounts = strings.Split(*oiz2eAmounts, ",")
 	}
 
 	symbols := make([]string, 0)
-	if bep2eSymbols != nil && len(*bep2eSymbols) > 0 {
-		symbols = strings.Split(*bep2eSymbols, ",")
+	if oiz2eSymbols != nil && len(*oiz2eSymbols) > 0 {
+		symbols = strings.Split(*oiz2eSymbols, ",")
 	}
 
 	contracts := make([]string, 0)
-	if bep2eContracts != nil && len(*bep2eContracts) > 0 {
-		contracts = strings.Split(*bep2eContracts, ",")
+	if oiz2eContracts != nil && len(*oiz2eContracts) > 0 {
+		contracts = strings.Split(*oiz2eContracts, ",")
 	}
 
-	if len(bep2eNumAmounts) != len(symbols) || len(symbols) != len(contracts) {
-		log.Crit("Length of bep2eContracts, bep2eSymbols, bep2eAmounts mismatch")
+	if len(oiz2eNumAmounts) != len(symbols) || len(symbols) != len(contracts) {
+		log.Crit("Length of oiz2eContracts, oiz2eSymbols, oiz2eAmounts mismatch")
 	}
 
-	bep2eInfos := make(map[string]bep2eInfo, len(symbols))
+	oiz2eInfos := make(map[string]oiz2eInfo, len(symbols))
 	for idx, s := range symbols {
-		n, ok := big.NewInt(0).SetString(bep2eNumAmounts[idx], 10)
+		n, ok := big.NewInt(0).SetString(oiz2eNumAmounts[idx], 10)
 		if !ok {
-			log.Crit("failed to parse bep2eAmounts")
+			log.Crit("failed to parse oiz2eAmounts")
 		}
 		amountStr := big.NewFloat(0).Quo(big.NewFloat(0).SetInt(n), big.NewFloat(0).SetInt64(params.Ether)).String()
 
-		bep2eInfos[s] = bep2eInfo{
+		oiz2eInfos[s] = oiz2eInfo{
 			Contract:  common.HexToAddress(contracts[idx]),
 			Amount:    *n,
 			AmountStr: amountStr,
@@ -154,7 +154,7 @@ func main() {
 		"Amounts":    amounts,
 		"Recaptcha":  *captchaToken,
 		"NoAuth":     *noauthFlag,
-		"Bep2eInfos": bep2eInfos,
+		"Bep2eInfos": oiz2eInfos,
 	})
 	if err != nil {
 		log.Crit("Failed to render the faucet template", "err", err)
@@ -183,7 +183,7 @@ func main() {
 		log.Crit("Failed to unlock faucet signer account", "err", err)
 	}
 	// Assemble and start the faucet light service
-	faucet, err := newFaucet(genesis, *wsEndpoint, *wsEndpointMainnet, ks, website.Bytes(), bep2eInfos)
+	faucet, err := newFaucet(genesis, *wsEndpoint, *wsEndpointMainnet, ks, website.Bytes(), oiz2eInfos)
 	if err != nil {
 		log.Crit("Failed to start faucet", "err", err)
 	}
@@ -202,7 +202,7 @@ type request struct {
 	Tx      *types.Transaction `json:"tx"`      // Transaction funding the account
 }
 
-type bep2eInfo struct {
+type oiz2eInfo struct {
 	Contract  common.Address
 	Amount    big.Int
 	AmountStr string
@@ -212,7 +212,7 @@ type bep2eInfo struct {
 type faucet struct {
 	config        *params.ChainConfig // Chain configurations for signing
 	client        *ethclient.Client   // Client connection to the Ethereum chain
-	clientMainnet *ethclient.Client   // Client connection to BSC mainnet for balance check
+	clientMainnet *ethclient.Client   // Client connection to OIZ mainnet for balance check
 	index         []byte              // Index page to serve up on the web
 
 	keystore *keystore.KeyStore // Keystore containing the single signer
@@ -229,8 +229,8 @@ type faucet struct {
 
 	lock sync.RWMutex // Lock protecting the faucet's internals
 
-	bep2eInfos map[string]bep2eInfo
-	bep2eAbi   abi.ABI
+	oiz2eInfos map[string]oiz2eInfo
+	oiz2eAbi   abi.ABI
 
 	limiter *IPRateLimiter
 }
@@ -242,8 +242,8 @@ type wsConn struct {
 	wlock sync.Mutex
 }
 
-func newFaucet(genesis *core.Genesis, url string, mainnetUrl string, ks *keystore.KeyStore, index []byte, bep2eInfos map[string]bep2eInfo) (*faucet, error) {
-	bep2eAbi, err := abi.JSON(strings.NewReader(bep2eAbiJson))
+func newFaucet(genesis *core.Genesis, url string, mainnetUrl string, ks *keystore.KeyStore, index []byte, oiz2eInfos map[string]oiz2eInfo) (*faucet, error) {
+	oiz2eAbi, err := abi.JSON(strings.NewReader(oiz2eAbiJson))
 	if err != nil {
 		return nil, err
 	}
@@ -272,8 +272,8 @@ func newFaucet(genesis *core.Genesis, url string, mainnetUrl string, ks *keystor
 		account:       ks.Accounts()[0],
 		timeouts:      make(map[string]time.Time),
 		update:        make(chan struct{}, 1),
-		bep2eInfos:    bep2eInfos,
-		bep2eAbi:      bep2eAbi,
+		oiz2eInfos:    oiz2eInfos,
+		oiz2eAbi:      oiz2eAbi,
 		limiter:       limiter,
 	}, nil
 }
@@ -533,10 +533,10 @@ func (f *faucet) apiHandler(w http.ResponseWriter, r *http.Request) {
 			} else {
 				if balanceMainnet.Cmp(minMainnetBalance) < 0 {
 					f.lock.Unlock()
-					log.Warn("insufficient BNB on BSC mainnet", "address", mainnetAddr,
+					log.Warn("insufficient OIZ on OIZ mainnet", "address", mainnetAddr,
 						"balanceMainnet", balanceMainnet, "minMainnetBalance", minMainnetBalance)
 					// Send an error if failed to meet the minimum balance requirement
-					if err = sendError(wsconn, fmt.Errorf("insufficient BNB on BSC mainnet        (require >=%sBNB)",
+					if err = sendError(wsconn, fmt.Errorf("insufficient OIZ on OIZ mainnet        (require >=%sOIZ)",
 						weiToEtherStringFx(minMainnetBalance, 3))); err != nil {
 						log.Warn("Failed to send mainnet minimum balance error to client", "err", err)
 						return
@@ -547,9 +547,9 @@ func (f *faucet) apiHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Info("Faucet request valid", "url", msg.URL, "tier", msg.Tier, "user", username, "address", address, "ip", ip)
 
-		// now, it is ok to send tBNB or other tokens
+		// now, it is ok to send tOIZ or other tokens
 		var tx *types.Transaction
-		if msg.Symbol == "BNB" {
+		if msg.Symbol == "OIZ" {
 			// User wasn't funded recently, create the funding transaction
 			amount := new(big.Int).Div(new(big.Int).Mul(big.NewInt(int64(*payoutFlag)), ether), big.NewInt(10))
 			amount = new(big.Int).Mul(amount, new(big.Int).Exp(big.NewInt(5), big.NewInt(int64(msg.Tier)), nil))
@@ -557,13 +557,13 @@ func (f *faucet) apiHandler(w http.ResponseWriter, r *http.Request) {
 
 			tx = types.NewTransaction(f.nonce+uint64(len(f.reqs)), address, amount, 21000, f.price, nil)
 		} else {
-			tokenInfo, ok := f.bep2eInfos[msg.Symbol]
+			tokenInfo, ok := f.oiz2eInfos[msg.Symbol]
 			if !ok {
 				f.lock.Unlock()
 				log.Warn("Failed to find symbol", "symbol", msg.Symbol)
 				continue
 			}
-			input, err := f.bep2eAbi.Pack("transfer", address, &tokenInfo.Amount)
+			input, err := f.oiz2eAbi.Pack("transfer", address, &tokenInfo.Amount)
 			if err != nil {
 				f.lock.Unlock()
 				log.Warn("Failed to pack transfer transaction", "err", err)
@@ -859,7 +859,7 @@ func authTwitter(url string, tokenV1, tokenV2 string) (string, string, string, c
 	address := common.HexToAddress(string(regexp.MustCompile("0x[0-9a-fA-F]{40}").Find(body)))
 	if address == (common.Address{}) {
 		//lint:ignore ST1005 This error is to be displayed in the browser
-		return "", "", "", common.Address{}, errors.New("No BNB Smart Chain address found to fund")
+		return "", "", "", common.Address{}, errors.New("No OIZ Smart Chain address found to fund")
 	}
 	var avatar string
 	if parts = regexp.MustCompile(`src="([^"]+twimg\.com/profile_images[^"]+)"`).FindStringSubmatch(string(body)); len(parts) == 2 {
@@ -985,7 +985,7 @@ func authFacebook(url string) (string, string, common.Address, error) {
 	address := common.HexToAddress(string(regexp.MustCompile("0x[0-9a-fA-F]{40}").Find(body)))
 	if address == (common.Address{}) {
 		//lint:ignore ST1005 This error is to be displayed in the browser
-		return "", "", common.Address{}, errors.New("No BNB Smart Chain address found to fund. Please check the post URL and verify that it can be viewed publicly.")
+		return "", "", common.Address{}, errors.New("No OIZ Smart Chain address found to fund. Please check the post URL and verify that it can be viewed publicly.")
 	}
 	var avatar string
 	if parts = regexp.MustCompile(`src="([^"]+fbcdn\.net[^"]+)"`).FindStringSubmatch(string(body)); len(parts) == 2 {
@@ -1001,7 +1001,7 @@ func authNoAuth(url string) (string, string, common.Address, error) {
 	address := common.HexToAddress(regexp.MustCompile("0x[0-9a-fA-F]{40}").FindString(url))
 	if address == (common.Address{}) {
 		//lint:ignore ST1005 This error is to be displayed in the browser
-		return "", "", common.Address{}, errors.New("No BNB Smart Chain address found to fund")
+		return "", "", common.Address{}, errors.New("No OIZ Smart Chain address found to fund")
 	}
 	return address.Hex() + "@noauth", "", address, nil
 }

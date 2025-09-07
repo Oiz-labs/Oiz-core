@@ -1,5 +1,5 @@
-// Copyright 2023 The bsc Authors
-// This file is part of bsc.
+// Copyright 2023 The oiz Authors
+// This file is part of oiz.
 package main
 
 import (

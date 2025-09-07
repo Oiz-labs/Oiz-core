@@ -1,4 +1,4 @@
-package bsc
+package oiz
 
 import (
 	"time"
@@ -40,7 +40,7 @@ type Peer struct {
 	dispatcher    *Dispatcher                // Message request-response dispatcher
 
 	*p2p.Peer                   // The embedded P2P package peer
-	rw        p2p.MsgReadWriter // Input/output streams for bsc
+	rw        p2p.MsgReadWriter // Input/output streams for oiz
 	version   uint              // Protocol version negotiated
 	logger    log.Logger        // Contextual logger with the peer id injected
 	term      chan struct{}     // Termination channel to stop the broadcasters

@@ -40,7 +40,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/crypto/kzg4844"
-	"github.com/ethereum/go-ethereum/eth/protocols/bsc"
+	"github.com/ethereum/go-ethereum/eth/protocols/oiz"
 	"github.com/ethereum/go-ethereum/ethdb"
 	"github.com/ethereum/go-ethereum/p2p"
 	"github.com/ethereum/go-ethereum/p2p/enode"
@@ -721,8 +721,8 @@ func TestHandleNewBlock(t *testing.T) {
 			Version: ETH68,
 		},
 		{
-			Name:    "bsc",
-			Version: bsc.Bsc1,
+			Name:    "oiz",
+			Version: oiz.Oiz1,
 		},
 	}
 	caps := []p2p.Cap{
@@ -731,8 +731,8 @@ func TestHandleNewBlock(t *testing.T) {
 			Version: ETH68,
 		},
 		{
-			Name:    "bsc",
-			Version: bsc.Bsc1,
+			Name:    "oiz",
+			Version: oiz.Oiz1,
 		},
 	}
 	// Create a source handler to send messages through and a sink peer to receive them

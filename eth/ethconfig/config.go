@@ -49,7 +49,7 @@ var FullNodeGPO = gasprice.Config{
 	IgnorePrice:     gasprice.DefaultIgnorePrice,
 }
 
-// Defaults contains default settings for use on the BSC main net.
+// Defaults contains default settings for use on the OIZ main net.
 var Defaults = Config{
 	HistoryMode:        history.KeepAll,
 	SyncMode:           SnapSync,
@@ -105,7 +105,7 @@ type Config struct {
 	// nodes to connect to.
 	EthDiscoveryURLs  []string
 	SnapDiscoveryURLs []string
-	BscDiscoveryURLs  []string
+	OizDiscoveryURLs  []string
 
 	// State options.
 	NoPruning  bool // Whether to disable pruning and flush everything to disk

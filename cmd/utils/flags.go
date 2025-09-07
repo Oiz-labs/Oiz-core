@@ -172,14 +172,14 @@ var (
 		Value:    ethconfig.Defaults.NetworkId,
 		Category: flags.EthCategory,
 	}
-	BSCMainnetFlag = &cli.BoolFlag{
+	OIZMainnetFlag = &cli.BoolFlag{
 		Name:     "mainnet",
 		Usage:    "BSC mainnet",
 		Category: flags.EthCategory,
 	}
 	ChapelFlag = &cli.BoolFlag{
 		Name:     "chapel",
-		Usage:    "Chapel network: pre-configured Proof-of-Stake-Authority BSC test network",
+		Usage:    "Chapel network: pre-configured Proof-of-Stake-Authority OIZ test network",
 		Category: flags.EthCategory,
 	}
 	// Dev mode
@@ -1277,7 +1277,7 @@ var (
 		ChapelFlag,
 	}
 	// NetworkFlags is the flag group of all built-in supported networks.
-	NetworkFlags = append([]cli.Flag{BSCMainnetFlag}, TestnetFlags...)
+	NetworkFlags = append([]cli.Flag{OIZMainnetFlag}, TestnetFlags...)
 
 	// DatabaseFlags is the flag group of all database flags.
 	DatabaseFlags = []cli.Flag{
@@ -1954,7 +1954,7 @@ func setRequiredBlocks(ctx *cli.Context, cfg *ethconfig.Config) {
 // SetEthConfig applies eth-related command line flags to the config.
 func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 	// Avoid conflicting network flags, don't allow network id override on preset networks
-	flags.CheckExclusive(ctx, BSCMainnetFlag, DeveloperFlag, NetworkIdFlag)
+	flags.CheckExclusive(ctx, OIZMainnetFlag, DeveloperFlag, NetworkIdFlag)
 	flags.CheckExclusive(ctx, DeveloperFlag, ExternalSignerFlag) // Can't use both ephemeral unlocked and external signer
 
 	// Set configurations from CLI flags
@@ -2165,7 +2165,7 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 		cfg.RPCTxFeeCap = ctx.Float64(RPCGlobalTxFeeCapFlag.Name)
 	}
 	if ctx.IsSet(NoDiscoverFlag.Name) {
-		cfg.EthDiscoveryURLs, cfg.SnapDiscoveryURLs, cfg.BscDiscoveryURLs = []string{}, []string{}, []string{}
+		cfg.EthDiscoveryURLs, cfg.SnapDiscoveryURLs, cfg.OizDiscoveryURLs = []string{}, []string{}, []string{}
 	} else if ctx.IsSet(DNSDiscoveryFlag.Name) {
 		urls := ctx.String(DNSDiscoveryFlag.Name)
 		if urls == "" {
@@ -2176,12 +2176,12 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 	}
 	// Override any default configs for hard coded networks.
 	switch {
-	case ctx.Bool(BSCMainnetFlag.Name):
+	case ctx.Bool(OIZMainnetFlag.Name):
 		if !ctx.IsSet(NetworkIdFlag.Name) {
 			cfg.NetworkId = 56
 		}
-		cfg.Genesis = core.DefaultBSCGenesisBlock()
-		SetDNSDiscoveryDefaults(cfg, params.BSCGenesisHash)
+		cfg.Genesis = core.DefaultOIZGenesisBlock()
+		SetDNSDiscoveryDefaults(cfg, params.OIZGenesisHash)
 	case ctx.Bool(ChapelFlag.Name) || cfg.NetworkId == 97:
 		if !ctx.IsSet(NetworkIdFlag.Name) {
 			cfg.NetworkId = 97
@@ -2320,7 +2320,7 @@ func SetDNSDiscoveryDefaults(cfg *ethconfig.Config, genesis common.Hash) {
 	if url := params.KnownDNSNetwork(genesis, protocol); url != "" {
 		cfg.EthDiscoveryURLs = []string{url}
 		cfg.SnapDiscoveryURLs = cfg.EthDiscoveryURLs
-		cfg.BscDiscoveryURLs = cfg.EthDiscoveryURLs
+		cfg.OizDiscoveryURLs = cfg.EthDiscoveryURLs
 	}
 }
 
@@ -2664,8 +2664,8 @@ func DialRPCWithHeaders(endpoint string, headers []string) (*rpc.Client, error) 
 func MakeGenesis(ctx *cli.Context) *core.Genesis {
 	var genesis *core.Genesis
 	switch {
-	case ctx.Bool(BSCMainnetFlag.Name):
-		genesis = core.DefaultBSCGenesisBlock()
+	case ctx.Bool(OIZMainnetFlag.Name):
+		genesis = core.DefaultOIZGenesisBlock()
 	case ctx.Bool(ChapelFlag.Name):
 		genesis = core.DefaultChapelGenesisBlock()
 	case ctx.Bool(DeveloperFlag.Name):

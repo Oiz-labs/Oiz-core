@@ -92,7 +92,7 @@ type StateDB struct {
 	originalRoot common.Hash
 	expectedRoot common.Hash // The state root in the block header
 
-	// if needBadSharedStorage = true, try read from sharedPool firstly, compatible with old erroneous data(https://forum.bnbchain.org/t/about-the-hertzfix/2400).
+	// if needBadSharedStorage = true, try read from sharedPool firstly, compatible with old erroneous data(https://forum.oizchain.org/t/about-the-hertzfix/2400).
 	// else read from sharedPool which is not in stateObjectsDestruct.
 	needBadSharedStorage bool
 

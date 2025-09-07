@@ -1,4 +1,4 @@
-package bsc
+package oiz
 
 import (
 	"github.com/ethereum/go-ethereum/rlp"
@@ -12,5 +12,5 @@ type enrEntry struct {
 
 // ENRKey implements enr.Entry.
 func (e enrEntry) ENRKey() string {
-	return "bsc"
+	return "oiz"
 }

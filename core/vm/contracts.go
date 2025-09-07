@@ -1576,7 +1576,7 @@ func (c *p256Verify) Run(input []byte) ([]byte, error) {
 	}
 }
 
-// verifyDoubleSignEvidence implements bsc header verification precompile.
+// verifyDoubleSignEvidence implements oiz header verification precompile.
 type verifyDoubleSignEvidence struct{}
 
 // RequiredGas returns the gas required to execute the pre-compiled contract.

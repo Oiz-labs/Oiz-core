@@ -24,13 +24,13 @@ func _() {
 	_ = x[BalanceDecreaseSelfdestruct-13]
 	_ = x[BalanceDecreaseSelfdestructBurn-14]
 	_ = x[BalanceChangeRevert-15]
-	_ = x[BalanceDecreaseBSCDistributeReward-210]
-	_ = x[BalanceIncreaseBSCDistributeReward-211]
+	_ = x[BalanceDecreaseOIZDistributeReward-210]
+	_ = x[BalanceIncreaseOIZDistributeReward-211]
 }
 
 const (
 	_BalanceChangeReason_name_0 = "UnspecifiedBalanceIncreaseRewardMineUncleBalanceIncreaseRewardMineBlockBalanceIncreaseWithdrawalBalanceIncreaseGenesisBalanceBalanceIncreaseRewardTransactionFeeBalanceDecreaseGasBuyBalanceIncreaseGasReturnBalanceIncreaseDaoContractBalanceDecreaseDaoAccountTransferTouchAccountBalanceIncreaseSelfdestructBalanceDecreaseSelfdestructBalanceDecreaseSelfdestructBurnRevert"
-	_BalanceChangeReason_name_1 = "BalanceDecreaseBSCDistributeRewardBalanceIncreaseBSCDistributeReward"
+	_BalanceChangeReason_name_1 = "BalanceDecreaseOIZDistributeRewardBalanceIncreaseOIZDistributeReward"
 )
 
 var (

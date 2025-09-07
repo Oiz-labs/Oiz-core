@@ -25,14 +25,14 @@ function printUsage() {
     console.log("  GetSlashCount: get slash state at a specific block height");
     console.log("  GetPerformanceData: analyze the performance data of a block range");
     console.log("  GetBlobTxs: get BlobTxs of a block range");
-    console.log("  GetFaucetStatus: get faucet status of BSC testnet");
+    console.log("  GetFaucetStatus: get faucet status of OIZ testnet");
     console.log("  GetKeyParameters: dump some key governance parameter");
     console.log("  GetMevStatus: get mev blocks of a block range");
     console.log("  GetLargeTxs: get large txs of a block range");
     console.log("\nOptions:");
     console.log("  --rpc        specify the url of RPC endpoint");
-    console.log("               mainnet: https://bsc-mainnet.nodereal.io/v1/cc07638d01a64904a662599433827378");
-    console.log("               testnet: https://bsc-testnet.nodereal.io/v1/cc07638d01a64904a662599433827378");
+    console.log("               mainnet: https://oiz-mainnet.nodereal.io/v1/cc07638d01a64904a662599433827378");
+    console.log("               testnet: https://oiz-testnet.nodereal.io/v1/cc07638d01a64904a662599433827378");
     console.log("  --startNum   the start block number");
     console.log("  --endNum     the end block number");
     console.log("  --miner      the miner address");
@@ -42,17 +42,17 @@ function printUsage() {
     console.log("  --stepLength the size of block num for each step, default: 115200(1 day)");
     console.log("  --stepNum    the step num, default: 1");
     console.log("\nExample:");
-    console.log("  node getchainstatus.js GetMaxTxCountInBlockRange --rpc https://bsc-testnet-dataseed.bnbchain.org --startNum 40000001  --endNum 40000005");
-    console.log("  node getchainstatus.js GetBinaryVersion --rpc https://bsc-testnet-dataseed.bnbchain.org --num 21 --turnLength 8");
-    console.log("  node getchainstatus.js GetTopAddr --rpc https://bsc-testnet-dataseed.bnbchain.org --startNum 40000001  --endNum 40000010 --topNum 10");
-    console.log("  node getchainstatus.js GetSlashCount --rpc https://bsc-testnet-dataseed.bnbchain.org --blockNum 40000001 --stepNum 1 --stepLength 115200"); // default: latest block
-    console.log("  node getchainstatus.js GetPerformanceData --rpc https://bsc-testnet-dataseed.bnbchain.org --startNum 40000001  --endNum 40000010");
-    console.log("  node getchainstatus.js GetBlobTxs --rpc https://bsc-testnet-dataseed.bnbchain.org --startNum 40000001  --endNum 40000010");
-    console.log("  node getchainstatus.js GetFaucetStatus --rpc https://bsc-testnet-dataseed.bnbchain.org --startNum 40000001  --endNum 40000010");
-    console.log("  node getchainstatus.js GetKeyParameters --rpc https://bsc-testnet-dataseed.bnbchain.org"); // default: latest block
-    console.log("  node getchainstatus.js GetEip7623 --rpc https://bsc-testnet-dataseed.bnbchain.org --startNum 40000001  --endNum 40000010");
-    console.log("  node getchainstatus.js GetMevStatus --rpc https://bsc-testnet-dataseed.bnbchain.org --startNum 40000001  --endNum 40000010");
-    console.log("  node getchainstatus.js GetLargeTxs --rpc https://bsc-testnet-dataseed.bnbchain.org --startNum 40000001  --num 100 --gasUsedThreshold 5000000");
+    console.log("  node getchainstatus.js GetMaxTxCountInBlockRange --rpc https://oiz-testnet-dataseed.oizchain.org --startNum 40000001  --endNum 40000005");
+    console.log("  node getchainstatus.js GetBinaryVersion --rpc https://oiz-testnet-dataseed.oizchain.org --num 21 --turnLength 8");
+    console.log("  node getchainstatus.js GetTopAddr --rpc https://oiz-testnet-dataseed.oizchain.org --startNum 40000001  --endNum 40000010 --topNum 10");
+    console.log("  node getchainstatus.js GetSlashCount --rpc https://oiz-testnet-dataseed.oizchain.org --blockNum 40000001 --stepNum 1 --stepLength 115200"); // default: latest block
+    console.log("  node getchainstatus.js GetPerformanceData --rpc https://oiz-testnet-dataseed.oizchain.org --startNum 40000001  --endNum 40000010");
+    console.log("  node getchainstatus.js GetBlobTxs --rpc https://oiz-testnet-dataseed.oizchain.org --startNum 40000001  --endNum 40000010");
+    console.log("  node getchainstatus.js GetFaucetStatus --rpc https://oiz-testnet-dataseed.oizchain.org --startNum 40000001  --endNum 40000010");
+    console.log("  node getchainstatus.js GetKeyParameters --rpc https://oiz-testnet-dataseed.oizchain.org"); // default: latest block
+    console.log("  node getchainstatus.js GetEip7623 --rpc https://oiz-testnet-dataseed.oizchain.org --startNum 40000001  --endNum 40000010");
+    console.log("  node getchainstatus.js GetMevStatus --rpc https://oiz-testnet-dataseed.oizchain.org --startNum 40000001  --endNum 40000010");
+    console.log("  node getchainstatus.js GetLargeTxs --rpc https://oiz-testnet-dataseed.oizchain.org --startNum 40000001  --num 100 --gasUsedThreshold 5000000");
 }
 
 program.usage = printUsage;
@@ -86,16 +86,16 @@ const slashAbi = [
     "function felonySlashScope() external view returns (uint256)",
 ];
 
-// https://github.com/bnb-chain/bsc-genesis-contract/blob/master/contracts/StakeHub.sol
+// https://github.com/oiz-labs/oiz-core-genesis-contract/blob/master/contracts/StakeHub.sol
 const stakeHubAbi = [
     "function getValidatorElectionInfo(uint256 offset, uint256 limit) external view returns (address[], uint256[], bytes[], uint256)",
     "function getValidatorDescription(address validatorAddr) external view returns (tuple(string, string, string, string))",
     "function consensusToOperator(address consensusAddr) public view returns (address)",
-    "function minSelfDelegationBNB() public view returns (uint256)", // default 2000, valid: 1000 -> 100,000
+    "function minSelfDelegationOIZ() public view returns (uint256)", // default 2000, valid: 1000 -> 100,000
     "function maxElectedValidators() public view returns (uint256)", // valid: 1 -> 500
     "function unbondPeriod() public view returns (uint256)", // default 7days, valid: 3days ->30days
-    "function downtimeSlashAmount() public view returns (uint256)", // default 10BNB, valid: 5 -> felonySlashAmount
-    "function felonySlashAmount() public view returns (uint256)", // default 200BNB, valid: > max(100, downtimeSlashAmount)
+    "function downtimeSlashAmount() public view returns (uint256)", // default 10OIZ, valid: 5 -> felonySlashAmount
+    "function felonySlashAmount() public view returns (uint256)", // default 200OIZ, valid: > max(100, downtimeSlashAmount)
     "function downtimeJailTime() public view returns (uint256)", // default 2days,
     "function felonyJailTime() public view returns (uint256)", // default 30days,
     "function getValidators(uint256, uint256) external view returns(address[], address[], uint256)",
@@ -120,13 +120,13 @@ const timelock = new ethers.Contract(TimelockContract, timelockAbi, provider);
 
 const validatorMap = new Map([
     // consensusAddr -> [moniker, operatorAddr, voteAddr]
-    // BSC mainnet
+    // OIZ mainnet
     ['0x58567F7A51a58708C8B40ec592A38bA64C0697De', [ 'Legend'  , '0x773760b0708a5Cc369c346993a0c225D8e4043B1', '0x8d78def84b10ab93dbfff6980d1054a2bc561bcf0abf3daf6096849bf03744fd4a49392e4813dc2251d68f6f95f27ba7']],
     ['0x37e9627A91DD13e453246856D58797Ad6583D762', ['LegendII' , '0x343dA7Ff0446247ca47AA41e2A25c5Bbb230ED0A', '0xabd04e3688a7c071dbc7eb3d0ace1c06baf163fdc8ffc742fec16f09fa468d30778a3c533b944899d33ae3225a3aee07']],
     ['0xB4647b856CB9C3856d559C885Bed8B43e0846a47', [ 'CertiK'  , '0xe0761D6679aE9691C98C3f07867740b08f43e510', '0xa663982486c84b2f66d9391efe6875d30be1d907e55d9c4a5a224de92a5d8ff180cc4ebca44253fa5a9730cc89d61994']],
-    ['0x502aECFE253E6AA0e8D2A06E12438FFeD0Fe16a0', [ 'BscScan' , '0x0C5c547215c6516603c3de9525abEf86f66D3A54', '0xb15df58914a6b751909f0558a9f9af8efca7d46e480fc24478d977dafe7daf5161b38c72e9e1ea4865c288ef5b8054ab']],
+    ['0x502aECFE253E6AA0e8D2A06E12438FFeD0Fe16a0', [ 'OizScan' , '0x0C5c547215c6516603c3de9525abEf86f66D3A54', '0xb15df58914a6b751909f0558a9f9af8efca7d46e480fc24478d977dafe7daf5161b38c72e9e1ea4865c288ef5b8054ab']],
     ['0x5009317FD4F6F8FeEa9dAe41E5F0a4737BB7A7D5', ['NodeReal' , '0x7d0F8A6D1C8fbF929Dcf4847A31E30d14923Fa31', '0xb3a0de43e5a979f8d7a9ad04f8f3f102bdbb17ef0bf6ac9a8fce3f110f409d99828be80295da56c2c7a7becd3647ce40']],
-    ['0xD3b0d838cCCEAe7ebF1781D11D1bB741DB7Fe1A7', [ 'BNBEve'  , '0xA3beF3479254a2ec123Bf4CBa34499f94D96Ee5b', '0xb39bdc22b7275d8456ee325424d33829d364270b1ecebb389318c7f0cb1f1c334f05d1d5e26472f2cd07f5d8025ea266']],
+    ['0xD3b0d838cCCEAe7ebF1781D11D1bB741DB7Fe1A7', [ 'OIZEve'  , '0xA3beF3479254a2ec123Bf4CBa34499f94D96Ee5b', '0xb39bdc22b7275d8456ee325424d33829d364270b1ecebb389318c7f0cb1f1c334f05d1d5e26472f2cd07f5d8025ea266']],
     ['0xCa503a7eD99eca485da2E875aedf7758472c378C', ['InfStones', '0xd34403249B2d82AAdDB14e778422c966265e5Fb5', '0x91dce99bbdc44ee9500ed1e5c864bc88ba518585c7e6de5e94d26ee216dd8a5e06c5d2fc740123976c9588787b54998c']],
     ['0x460A252B4fEEFA821d3351731220627D7B7d1F3d', [ 'Defibit' , '0x4DC1Bf52da103452097df48505A6D01020fFB22b', '0xb3e34a6e7967c4da80dd3e5227acb02c92f33a026bbce5e52c19b7d8746b7e55d3e29b9083de0bf334fdf8ac91bc1485']],
     ['0x4e5acf9684652BEa56F2f01b7101a225Ee33d23f', [ 'HashKey' , '0x78504de17d6Dba03387C7CaE5322B9C86bF3027f', '0x8bcfeba8fcafdc6b6f9016d5a0dd08e4685a13bffd8c2087f66bf7ca2dace7fbbc40c40824e30a84d3fe62a2ddcd5217']],
@@ -210,7 +210,7 @@ const validatorMap = new Map([
 ]);
 
 const builderMap = new Map([
-    // BSC mainnet
+    // OIZ mainnet
     //     blockrazor
     ["0x5532CdB3c0c4278f9848fc4560b495b70bA67455", "blockrazor dublin"],
     ["0xBA4233f6e478DB76698b0A5000972Af0196b7bE1", "blockrazor frankfurt"],
@@ -278,7 +278,7 @@ const builderMap = new Map([
 ]);
 
 // 1.cmd: "GetMaxTxCountInBlockRange", usage:
-// node getchainstatus.js GetMaxTxCountInBlockRange --rpc https://bsc-testnet-dataseed.bnbchain.org \
+// node getchainstatus.js GetMaxTxCountInBlockRange --rpc https://oiz-testnet-dataseed.oizchain.org \
 //      --startNum 40000001  --endNum 40000005 \
 //      --miner(optional): specified: find the max txCounter from the specified validator,
 //                         not specified: find the max txCounter from all validators
@@ -305,7 +305,7 @@ async function getMaxTxCountInBlockRange() {
 
 // 2.cmd: "GetBinaryVersion", usage:
 // node getchainstatus.js GetBinaryVersion \
-//      --rpc https://bsc-testnet-dataseed.bnbchain.org \
+//      --rpc https://oiz-testnet-dataseed.oizchain.org \
 //       --num(optional): default 21, the number of blocks that will be checked
 //       --turnLength(optional): default 8, the consecutive block length
 async function getBinaryVersion() {
@@ -336,7 +336,7 @@ async function getBinaryVersion() {
 
 // 3.cmd: "GetTopAddr", usage:
 // node getchainstatus.js GetTopAddr \
-//      --rpc https://bsc-testnet-dataseed.bnbchain.org \
+//      --rpc https://oiz-testnet-dataseed.oizchain.org \
 //      --startNum 40000001  --endNum 40000005 \
 //      --topNum(optional): the top num of address to be displayed, default 20
 function getTopKElements(map, k) {
@@ -376,7 +376,7 @@ async function getTopAddr() {
 
 // 4.cmd: "GetSlashCount", usage:
 // node getchainstatus.js GetSlashCount \
-//      --rpc https://bsc-testnet-dataseed.bnbchain.org \
+//      --rpc https://oiz-testnet-dataseed.oizchain.org \
 //      --blockNum(optional): the block num which is based for the slash state, default: latest block
 //      --stepLength(optional): the step of the block num, default: 115200, 115200 blocks ~= 1 day
 //      --stepNum(optional): the step num, default: 1, only show the current slash count
@@ -459,7 +459,7 @@ async function getSlashCount() {
 }
 // 5.cmd: "getPerformanceData", usage:
 // node getchainstatus.js getPerformanceData \
-//      --rpc https://bsc-testnet-dataseed.bnbchain.org \
+//      --rpc https://oiz-testnet-dataseed.oizchain.org \
 //      --startNum 40000001  --endNum 40000005
 async function getPerformanceData() {
     let txCountTotal = 0;
@@ -556,10 +556,10 @@ async function getPerformanceData() {
 
 // 6.cmd: "GetBlobTxs", usage:
 // node getchainstatus.js GetBlobTxs \
-//      --rpc https://bsc-testnet-dataseed.bnbchain.org \
+//      --rpc https://oiz-testnet-dataseed.oizchain.org \
 //      --startNum 40000001  --endNum 40000005
 // depends on ethjs v6.11.0+ for 4844, https://github.com/ethers-io/ethers.js/releases/tag/v6.11.0
-// BSC testnet enabled 4844 on block: 39539137
+// OIZ testnet enabled 4844 on block: 39539137
 async function getBlobTxs() {
     var startBlock = parseInt(program.startNum);
     var endBlock = parseInt(program.endNum);
@@ -594,7 +594,7 @@ async function getBlobTxs() {
 
 // 7.cmd: "GetFaucetStatus", usage:
 // node getchainstatus.js GetFaucetStatus \
-//      --rpc https://bsc-testnet-dataseed.bnbchain.org \
+//      --rpc https://oiz-testnet-dataseed.oizchain.org \
 //      --startNum 40000001  --endNum 40000005
 async function getFaucetStatus() {
     var startBlock = parseInt(program.startNum);
@@ -629,7 +629,7 @@ async function getFaucetStatus() {
 
 // 8.cmd: "GetKeyParameters", usage:
 // node getchainstatus.js GetKeyParameters \
-//      --rpc https://bsc-testnet-dataseed.bnbchain.org \
+//      --rpc https://oiz-testnet-dataseed.oizchain.org \
 //      --blockNum(optional): the block num which is based for the slash state, default: latest block
 async function getKeyParameters() {
     let blockNum = ethers.getNumber(program.blockNum);
@@ -665,7 +665,7 @@ async function getKeyParameters() {
 
 
     // part 3: staking
-    // let minSelfDelegationBNB = await stakeHub.minSelfDelegationBNB({blockTag:blockNum})/BigInt(10**18)
+    // let minSelfDelegationOIZ = await stakeHub.minSelfDelegationOIZ({blockTag:blockNum})/BigInt(10**18)
     let maxElectedValidators = await stakeHub.maxElectedValidators({ blockTag: blockNum });
     let validatorElectionInfo = await stakeHub.getValidatorElectionInfo(0, 0, { blockTag: blockNum });
     let consensusAddrs = validatorElectionInfo[0];
@@ -719,7 +719,7 @@ async function getKeyParameters() {
 
 // 9.cmd: "getEip7623", usage:
 // node getEip7623.js GetEip7623 \
-//      --rpc https://bsc-testnet-dataseed.bnbchain.org \
+//      --rpc https://oiz-testnet-dataseed.oizchain.org \
 //      --startNum 40000001  --endNum 40000005
 async function getEip7623() {
     var startBlock = parseInt(program.startNum);
@@ -770,7 +770,7 @@ async function getEip7623() {
 
 // 10.cmd: "getMevStatus", usage:
 // node getchainstatus.js GetMevStatus \
-//      --rpc https://bsc-testnet-dataseed.bnbchain.org \
+//      --rpc https://oiz-testnet-dataseed.oizchain.org \
 //      --startNum(optional): default to last 100 blocks, the start block number to analyze
 //      --endNum(optional): default to latest block, the end block number to analyze
 // 
@@ -788,13 +788,13 @@ async function getEip7623() {
 //
 // Example:
 // # Analyze last 100 blocks (default)
-// node getchainstatus.js GetMevStatus --rpc https://bsc-testnet-dataseed.bnbchain.org
+// node getchainstatus.js GetMevStatus --rpc https://oiz-testnet-dataseed.oizchain.org
 //
 // # Analyze specific range
-// node getchainstatus.js GetMevStatus --rpc https://bsc-testnet-dataseed.bnbchain.org --startNum 40000001 --endNum 40000005
+// node getchainstatus.js GetMevStatus --rpc https://oiz-testnet-dataseed.oizchain.org --startNum 40000001 --endNum 40000005
 //
 // # Analyze from specific block to latest
-// node getchainstatus.js GetMevStatus --rpc https://bsc-testnet-dataseed.bnbchain.org --startNum 40000001
+// node getchainstatus.js GetMevStatus --rpc https://oiz-testnet-dataseed.oizchain.org --startNum 40000001
 async function getMevStatus() {
     let counts = {
         local: 0,
@@ -895,7 +895,7 @@ async function getMevStatus() {
 
 // 11.cmd: "getLargeTxs", usage:
 // node getchainstatus.js GetLargeTxs \
-//      --rpc https://bsc-testnet-dataseed.bnbchain.org \
+//      --rpc https://oiz-testnet-dataseed.oizchain.org \
 //      --startNum 40000001  --num 100 \
 //      --gasUsedThreshold 5000000
 async function getLargeTxs() {

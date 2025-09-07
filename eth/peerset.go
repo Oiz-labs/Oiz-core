@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/eth/protocols/bsc"
+	"github.com/ethereum/go-ethereum/eth/protocols/oiz"
 	"github.com/ethereum/go-ethereum/eth/protocols/eth"
 	"github.com/ethereum/go-ethereum/eth/protocols/snap"
 	"github.com/ethereum/go-ethereum/log"
@@ -53,9 +53,9 @@ var (
 	// snap protocol without advertising the eth main protocol.
 	errSnapWithoutEth = errors.New("peer connected on snap without compatible eth support")
 
-	// errBscWithoutEth is returned if a peer attempts to connect only on the
-	// bsc protocol without advertising the eth main protocol.
-	errBscWithoutEth = errors.New("peer connected on bsc without compatible eth support")
+	// errOizWithoutEth is returned if a peer attempts to connect only on the
+	// oiz protocol without advertising the eth main protocol.
+	errOizWithoutEth = errors.New("peer connected on oiz without compatible eth support")
 )
 
 const (
@@ -81,8 +81,8 @@ type peerSet struct {
 	snapWait map[string]chan *snap.Peer // Peers connected on `eth` waiting for their snap extension
 	snapPend map[string]*snap.Peer      // Peers connected on the `snap` protocol, but not yet on `eth`
 
-	bscWait map[string]chan *bsc.Peer // Peers connected on `eth` waiting for their bsc extension
-	bscPend map[string]*bsc.Peer      // Peers connected on the `bsc` protocol, but not yet on `eth`
+	oizWait map[string]chan *oiz.Peer // Peers connected on `eth` waiting for their oiz extension
+	oizPend map[string]*oiz.Peer      // Peers connected on the `oiz` protocol, but not yet on `eth`
 
 	lock   sync.RWMutex
 	closed bool
@@ -95,8 +95,8 @@ func newPeerSet() *peerSet {
 		peers:    make(map[string]*ethPeer),
 		snapWait: make(map[string]chan *snap.Peer),
 		snapPend: make(map[string]*snap.Peer),
-		bscWait:  make(map[string]chan *bsc.Peer),
-		bscPend:  make(map[string]*bsc.Peer),
+		 oizWait:  make(map[string]chan *oiz.Peer),
+		oizPend:  make(map[string]*oiz.Peer),
 		quitCh:   make(chan struct{}),
 	}
 }
@@ -131,14 +131,14 @@ func (ps *peerSet) registerSnapExtension(peer *snap.Peer) error {
 	return nil
 }
 
-// registerBscExtension unblocks an already connected `eth` peer waiting for its
+// registerOizExtension unblocks an already connected `eth` peer waiting for its
 // `bsc` extension, or if no such peer exists, tracks the extension for the time
 // being until the `eth` main protocol starts looking for it.
-func (ps *peerSet) registerBscExtension(peer *bsc.Peer) error {
+func (ps *peerSet) registerOizExtension(peer *oiz.Peer) error {
 	// Reject the peer if it advertises `bsc` without `eth` as `bsc` is only a
 	// satellite protocol meaningful with the chain selection of `eth`
 	if !peer.RunningCap(eth.ProtocolName, eth.ProtocolVersions) {
-		return errBscWithoutEth
+		return errOizWithoutEth
 	}
 	// Ensure nobody can double connect
 	ps.lock.Lock()
@@ -148,16 +148,16 @@ func (ps *peerSet) registerBscExtension(peer *bsc.Peer) error {
 	if _, ok := ps.peers[id]; ok {
 		return errPeerAlreadyRegistered // avoid connections with the same id as existing ones
 	}
-	if _, ok := ps.bscPend[id]; ok {
+	if _, ok := ps.oizPend[id]; ok {
 		return errPeerAlreadyRegistered // avoid connections with the same id as pending ones
 	}
 	// Inject the peer into an `eth` counterpart is available, otherwise save for later
-	if wait, ok := ps.bscWait[id]; ok {
-		delete(ps.bscWait, id)
+	if wait, ok := ps.oizWait[id]; ok {
+		delete(ps.oizWait, id)
 		wait <- peer
 		return nil
 	}
-	ps.bscPend[id] = peer
+	ps.oizPend[id] = peer
 	return nil
 }
 
@@ -210,11 +210,11 @@ func (ps *peerSet) waitSnapExtension(peer *eth.Peer) (*snap.Peer, error) {
 	}
 }
 
-// waitBscExtension blocks until all satellite protocols are connected and tracked
+// waitOizExtension blocks until all satellite protocols are connected and tracked
 // by the peerset.
-func (ps *peerSet) waitBscExtension(peer *eth.Peer) (*bsc.Peer, error) {
+func (ps *peerSet) waitOizExtension(peer *eth.Peer) (*oiz.Peer, error) {
 	// If the peer does not support a compatible `bsc`, don't wait
-	if !peer.RunningCap(bsc.ProtocolName, bsc.ProtocolVersions) {
+	if !peer.RunningCap(oiz.ProtocolName, oiz.ProtocolVersions) {
 		return nil, nil
 	}
 	// Ensure nobody can double connect
@@ -225,20 +225,20 @@ func (ps *peerSet) waitBscExtension(peer *eth.Peer) (*bsc.Peer, error) {
 		ps.lock.Unlock()
 		return nil, errPeerAlreadyRegistered // avoid connections with the same id as existing ones
 	}
-	if _, ok := ps.bscWait[id]; ok {
+	if _, ok := ps.oizWait[id]; ok {
 		ps.lock.Unlock()
 		return nil, errPeerAlreadyRegistered // avoid connections with the same id as pending ones
 	}
 	// If `bsc` already connected, retrieve the peer from the pending set
-	if bsc, ok := ps.bscPend[id]; ok {
-		delete(ps.bscPend, id)
+	if oiz, ok := ps.oizPend[id]; ok {
+		delete(ps.oizPend, id)
 
 		ps.lock.Unlock()
-		return bsc, nil
+		return oiz, nil
 	}
 	// Otherwise wait for `bsc` to connect concurrently
-	wait := make(chan *bsc.Peer)
-	ps.bscWait[id] = wait
+	wait := make(chan *oiz.Peer)
+	ps.oizWait[id] = wait
 	ps.lock.Unlock()
 
 	select {
@@ -248,7 +248,7 @@ func (ps *peerSet) waitBscExtension(peer *eth.Peer) (*bsc.Peer, error) {
 	case <-time.After(extensionWaitTimeout):
 		// could be deadlock, so we use TryLock to avoid it.
 		if ps.lock.TryLock() {
-			delete(ps.bscWait, id)
+			delete(ps.oizWait, id)
 			ps.lock.Unlock()
 			return nil, errPeerWaitTimeout
 		}
@@ -260,7 +260,7 @@ func (ps *peerSet) waitBscExtension(peer *eth.Peer) (*bsc.Peer, error) {
 				return nil, errPeerWaitTimeout
 			case <-time.After(tryWaitTimeout):
 				if ps.lock.TryLock() {
-					delete(ps.bscWait, id)
+					delete(ps.oizWait, id)
 					ps.lock.Unlock()
 					return nil, errPeerWaitTimeout
 				}
@@ -269,7 +269,7 @@ func (ps *peerSet) waitBscExtension(peer *eth.Peer) (*bsc.Peer, error) {
 
 	case <-ps.quitCh:
 		ps.lock.Lock()
-		delete(ps.bscWait, id)
+		delete(ps.oizWait, id)
 		ps.lock.Unlock()
 		return nil, errPeerSetClosed
 	}
@@ -277,7 +277,7 @@ func (ps *peerSet) waitBscExtension(peer *eth.Peer) (*bsc.Peer, error) {
 
 // registerPeer injects a new `eth` peer into the working set, or returns an error
 // if the peer is already known.
-func (ps *peerSet) registerPeer(peer *eth.Peer, ext *snap.Peer, bscExt *bsc.Peer) error {
+func (ps *peerSet) registerPeer(peer *eth.Peer, ext *snap.Peer, oizExt *oiz.Peer) error {
 	// Start tracking the new peer
 	ps.lock.Lock()
 	defer ps.lock.Unlock()
@@ -296,8 +296,8 @@ func (ps *peerSet) registerPeer(peer *eth.Peer, ext *snap.Peer, bscExt *bsc.Peer
 		eth.snapExt = &snapPeer{ext}
 		ps.snapPeers++
 	}
-	if bscExt != nil {
-		eth.bscExt = &bscPeer{bscExt}
+	if oizExt != nil {
+		eth.oizExt = &oizPeer{bscExt}
 	}
 	ps.peers[id] = eth
 	return nil
@@ -455,7 +455,7 @@ func (ps *peerSet) peersWithoutVote(hash common.Hash) []*ethPeer {
 
 	list := make([]*ethPeer, 0, len(ps.peers))
 	for _, p := range ps.peers {
-		if p.bscExt != nil && !p.bscExt.KnownVote(hash) {
+		if p.oizExt != nil && !p.oizExt.KnownVote(hash) {
 			list = append(list, p)
 		}
 	}

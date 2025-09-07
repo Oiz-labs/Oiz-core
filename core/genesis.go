@@ -223,8 +223,8 @@ func getGenesisState(db ethdb.Database, blockhash common.Hash) (alloc types.Gene
 	switch blockhash {
 	case params.MainnetGenesisHash:
 		genesis = DefaultGenesisBlock()
-	case params.BSCGenesisHash:
-		genesis = DefaultBSCGenesisBlock()
+	case params.OIZGenesisHash:
+		genesis = DefaultOIZGenesisBlock()
 	case params.ChapelGenesisHash:
 		genesis = DefaultChapelGenesisBlock()
 	}
@@ -261,7 +261,7 @@ func (e *GenesisMismatchError) Error() string {
 }
 
 // ChainOverrides contains the changes to chain config
-// Typically, these modifications involve hardforks that are not enabled on the BSC mainnet, intended for testing purposes.
+// Typically, these modifications involve hardforks that are not enabled on the OIZ mainnet, intended for testing purposes.
 type ChainOverrides struct {
 	OverridePassedForkTime *uint64
 	OverrideLorentz        *uint64
@@ -329,8 +329,8 @@ func SetupGenesisBlockWithOverride(db ethdb.Database, triedb *triedb.Database, g
 	ghash := rawdb.ReadCanonicalHash(db, 0)
 	if (ghash == common.Hash{}) {
 		if genesis == nil {
-			log.Info("Writing default BSC mainnet genesis block")
-			genesis = DefaultBSCGenesisBlock()
+			log.Info("Writing default OIZ mainnet genesis block")
+			genesis = DefaultOIZGenesisBlock()
 		} else {
 			log.Info("Writing custom genesis block")
 		}
@@ -452,7 +452,7 @@ func LoadChainConfig(db ethdb.Database, genesis *Genesis) (cfg *params.ChainConf
 	}
 	// There is no stored chain config and no new config provided,
 	// In this case the default chain config(mainnet) will be used
-	return params.BSCChainConfig, params.BSCGenesisHash, nil
+	return params.OIZChainConfig, params.OIZGenesisHash, nil
 }
 
 // chainConfigOrDefault retrieves the attached chain configuration. If the genesis
@@ -515,7 +515,7 @@ func (g *Genesis) toBlockWithRoot(root common.Hash) *types.Block {
 			head.BaseFee = g.BaseFee
 		} else {
 			if g.Config.Parlia != nil {
-				head.BaseFee = new(big.Int).SetUint64(params.InitialBaseFeeForBSC)
+				head.BaseFee = new(big.Int).SetUint64(params.InitialBaseFeeForOIZ)
 			} else {
 				head.BaseFee = new(big.Int).SetUint64(params.InitialBaseFee)
 			}
@@ -645,11 +645,11 @@ func DefaultGenesisBlock() *Genesis {
 	}
 }
 
-// DefaultBSCGenesisBlock returns the BSC mainnet genesis block.
-func DefaultBSCGenesisBlock() *Genesis {
+// DefaultOIZGenesisBlock returns the OIZ mainnet genesis block.
+func DefaultOIZGenesisBlock() *Genesis {
 	alloc := decodePrealloc(bscMainnetAllocData)
 	return &Genesis{
-		Config:     params.BSCChainConfig,
+		Config:     params.OIZChainConfig,
 		Nonce:      0,
 		ExtraData:  hexutil.MustDecode("0x00000000000000000000000000000000000000000000000000000000000000002a7cdd959bfe8d9487b2a43b33565295a698f7e26488aa4d1955ee33403f8ccb1d4de5fb97c7ade29ef9f4360c606c7ab4db26b016007d3ad0ab86a0ee01c3b1283aa067c58eab4709f85e99d46de5fe685b1ded8013785d6623cc18d214320b6bb6475978f3adfc719c99674c072166708589033e2d9afec2be4ec20253b8642161bc3f444f53679c1f3d472f7be8361c80a4c1e7e9aaf001d0877f1cfde218ce2fd7544e0b2cc94692d4a704debef7bcb61328b8f7166496996a7da21cf1f1b04d9b3e26a3d0772d4c407bbe49438ed859fe965b140dcf1aab71a96bbad7cf34b5fa511d8e963dbba288b1960e75d64430b3230294d12c6ab2aac5c2cd68e80b16b581ea0a6e3c511bbd10f4519ece37dc24887e11b55d7ae2f5b9e386cd1b50a4550696d957cb4900f03a82012708dafc9e1b880fd083b32182b869be8e0922b81f8e175ffde54d797fe11eb03f9e3bf75f1d68bf0b8b6fb4e317a0f9d6f03eaf8ce6675bc60d8c4d90829ce8f72d0163c1d5cf348a862d55063035e7a025f4da968de7e4d7e4004197917f4070f1d6caa02bbebaebb5d7e581e4b66559e635f805ff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),
 		GasLimit:   40000000,
@@ -661,9 +661,9 @@ func DefaultBSCGenesisBlock() *Genesis {
 	}
 }
 
-// DefaultChapelGenesisBlock returns the BSC mainnet genesis block.
+// DefaultChapelGenesisBlock returns the OIZ mainnet genesis block.
 func DefaultChapelGenesisBlock() *Genesis {
-	alloc := decodePrealloc(bscChapelAllocData)
+	alloc := decodePrealloc(oizChapelAllocData)
 	return &Genesis{
 		Config:     params.ChapelChainConfig,
 		Nonce:      0,

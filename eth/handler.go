@@ -40,7 +40,7 @@ import (
 	"github.com/ethereum/go-ethereum/eth/downloader"
 	"github.com/ethereum/go-ethereum/eth/ethconfig"
 	"github.com/ethereum/go-ethereum/eth/fetcher"
-	"github.com/ethereum/go-ethereum/eth/protocols/bsc"
+	"github.com/ethereum/go-ethereum/eth/protocols/oiz"
 	"github.com/ethereum/go-ethereum/eth/protocols/eth"
 	"github.com/ethereum/go-ethereum/eth/protocols/snap"
 	"github.com/ethereum/go-ethereum/ethdb"
@@ -324,13 +324,13 @@ func newHandler(config *handlerConfig) (*handler, error) {
 		if p == nil {
 			return nil, errors.New("peer not found")
 		}
-		if p.bscExt == nil {
-			return nil, fmt.Errorf("peer does not support bsc protocol, peer: %v", p.ID())
+		if p.oizExt == nil {
+			return nil, fmt.Errorf("peer does not support oiz protocol, peer: %v", p.ID())
 		}
-		if p.bscExt.Version() != bsc.Bsc2 {
-			return nil, fmt.Errorf("remote peer does not support the required Bsc2 protocol version, peer: %v", p.ID())
+		if p.oizExt.Version() != oiz.Oiz2 {
+			return nil, fmt.Errorf("remote peer does not support the required Oiz2 protocol version, peer: %v", p.ID())
 		}
-		res, err := p.bscExt.RequestBlocksByRange(startHeight, startHash, count)
+		res, err := p.oizExt.RequestBlocksByRange(startHeight, startHash, count)
 		if err != nil {
 			return nil, err
 		}
@@ -454,9 +454,9 @@ func (h *handler) runEthPeer(peer *eth.Peer, handler eth.Handler) error {
 		peer.Log().Error("Snapshot extension barrier failed", "err", err)
 		return err
 	}
-	bsc, err := h.peers.waitBscExtension(peer)
+	oiz, err := h.peers.waitOizExtension(peer)
 	if err != nil {
-		peer.Log().Error("Bsc extension barrier failed", "err", err)
+		peer.Log().Error("Oiz extension barrier failed", "err", err)
 		return err
 	}
 
@@ -509,7 +509,7 @@ func (h *handler) runEthPeer(peer *eth.Peer, handler eth.Handler) error {
 	}
 
 	// Register the peer locally
-	if err := h.peers.registerPeer(peer, snap, bsc); err != nil {
+	if err := h.peers.registerPeer(peer, snap, oiz); err != nil {
 		peer.Log().Error("Ethereum peer registration failed", "err", err)
 		return err
 	}
@@ -536,8 +536,8 @@ func (h *handler) runEthPeer(peer *eth.Peer, handler eth.Handler) error {
 	// Propagate existing transactions and votes. new transactions and votes appearing
 	// after this will be sent via broadcasts.
 	h.syncTransactions(peer)
-	if h.votepool != nil && p.bscExt != nil {
-		h.syncVotes(p.bscExt)
+	if h.votepool != nil && p.oizExt != nil {
+		h.syncVotes(p.oizExt)
 	}
 
 	// Create a notification channel for pending requests if the peer goes down
@@ -614,25 +614,25 @@ func (h *handler) runSnapExtension(peer *snap.Peer, handler snap.Handler) error 
 	return handler(peer)
 }
 
-// runBscExtension registers a `bsc` peer into the joint eth/bsc peerset and
+// runOizExtension registers a `bsc` peer into the joint eth/oiz peerset and
 // starts handling inbound messages. As `bsc` is only a satellite protocol to
 // `eth`, all subsystem registrations and lifecycle management will be done by
 // the main `eth` handler to prevent strange races.
-func (h *handler) runBscExtension(peer *bsc.Peer, handler bsc.Handler) error {
+func (h *handler) runOizExtension(peer *oiz.Peer, handler oiz.Handler) error {
 	if !h.incHandlers() {
 		return p2p.DiscQuitting
 	}
 	defer h.decHandlers()
 
-	if err := h.peers.registerBscExtension(peer); err != nil {
+	if err := h.peers.registerOizExtension(peer); err != nil {
 		if metrics.Enabled() {
 			if peer.Inbound() {
-				bsc.IngressRegistrationErrorMeter.Mark(1)
+				oiz.IngressRegistrationErrorMeter.Mark(1)
 			} else {
-				bsc.EgressRegistrationErrorMeter.Mark(1)
+				oiz.EgressRegistrationErrorMeter.Mark(1)
 			}
 		}
-		peer.Log().Error("Bsc extension registration failed", "err", err, "name", peer.Name())
+		peer.Log().Error("Oiz extension registration failed", "err", err, "name", peer.Name())
 		return err
 	}
 	return handler(peer)
@@ -1005,7 +1005,7 @@ func (h *handler) BroadcastVote(vote *types.VoteEnvelope) {
 	for _, peer := range peers {
 		_, peerTD := peer.Head()
 		deltaTD := new(big.Int).Abs(new(big.Int).Sub(currentTD, peerTD))
-		if deltaTD.Cmp(big.NewInt(deltaTdThreshold)) < 1 && peer.bscExt != nil {
+		if deltaTD.Cmp(big.NewInt(deltaTdThreshold)) < 1 && peer.oizExt != nil {
 			voteMap[peer] = vote
 		}
 	}
@@ -1014,7 +1014,7 @@ func (h *handler) BroadcastVote(vote *types.VoteEnvelope) {
 		directPeers++
 		directCount += 1
 		votes := []*types.VoteEnvelope{_vote}
-		peer.bscExt.AsyncSendVotes(votes)
+		peer.oizExt.AsyncSendVotes(votes)
 	}
 	log.Debug("Vote broadcast", "vote packs", directPeers, "broadcast vote", directCount)
 }

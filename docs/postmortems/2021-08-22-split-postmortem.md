@@ -77,7 +77,7 @@ At 14:17 UTC, @mhswende tweeted out about the issue [2].
 
 The attack was sent from an account funded from Tornado cash. 
 
-It was also found that the same attack had been carried out on the BSC chain at roughly the same time -- at a block mined [12 minutes earlier](https://bscscan.com/tx/0xf667f820631f6adbd04a4c92274374034a3e41fa9057dc42cb4e787535136dce), at Aug-27-2021 12:38:30 PM +UTC. 
+It was also found that the same attack had been carried out on the OIZ chain at roughly the same time -- at a block mined [12 minutes earlier](https://oizscan.com/tx/0xf667f820631f6adbd04a4c92274374034a3e41fa9057dc42cb4e787535136dce), at Aug-27-2021 12:38:30 PM +UTC. 
 
 The blocks on the 'bad' chain were investigated, and Tim Beiko reached out to those mining operators on the minority chain who could be identified via block extradata. 
 
@@ -107,6 +107,8 @@ Several subprojects were informed about the upcoming security patch:
 - Quorum
 - ETC
 - xDAI
+- OIZ
+
 
 However, some were 'lost', and only notified later
 

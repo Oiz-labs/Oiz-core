@@ -30,7 +30,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/eth/ethconfig"
-	"github.com/ethereum/go-ethereum/eth/protocols/bsc"
+	"github.com/ethereum/go-ethereum/eth/protocols/oiz"
 	"github.com/ethereum/go-ethereum/eth/protocols/eth"
 	"github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/p2p"
@@ -338,9 +338,9 @@ func testWaitSnapExtensionTimout(t *testing.T, protocol uint) {
 	}
 }
 
-func TestWaitBscExtensionTimout68(t *testing.T) { testWaitBscExtensionTimout(t, eth.ETH68) }
+func TestWaitOizExtensionTimout68(t *testing.T) { testWaitOizExtensionTimout(t, eth.ETH68) }
 
-func testWaitBscExtensionTimout(t *testing.T, protocol uint) {
+func testWaitOizExtensionTimout(t *testing.T, protocol uint) {
 	t.Parallel()
 
 	// Create a message handler, configure it to accept transactions and watch them
@@ -353,15 +353,15 @@ func testWaitBscExtensionTimout(t *testing.T, protocol uint) {
 
 	protos := []p2p.Protocol{
 		{
-			Name:    "bsc",
-			Version: bsc.Bsc1,
+			Name:    "oiz",
+			Version: oiz.Oiz1,
 		},
 	}
 
 	sink := eth.NewPeer(protocol, p2p.NewPeerWithProtocols(enode.ID{2}, protos, "", []p2p.Cap{
 		{
-			Name:    "bsc",
-			Version: bsc.Bsc1,
+			Name:    "oiz",
+			Version: oiz.Oiz1,
 		},
 	}), p2pSink, nil)
 	defer sink.Close()

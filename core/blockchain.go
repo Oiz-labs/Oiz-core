@@ -228,7 +228,7 @@ func DefaultConfig() *BlockChainConfig {
 		StateScheme:      rawdb.HashScheme,
 		SnapshotLimit:    256,
 		SnapshotWait:     true,
-		ChainHistoryMode: history.KeepAll, // only `history.KeepAll` supported for bsc
+		ChainHistoryMode: history.KeepAll, // only `history.KeepAll` supported for oiz
 		// Transaction indexing is disabled by default.
 		// This is appropriate for most unit tests.
 		TxLookupLimit: -1,
@@ -637,7 +637,7 @@ func (bc *BlockChain) NoTries() bool {
 
 func (bc *BlockChain) cacheReceipts(hash common.Hash, receipts types.Receipts, block *types.Block) {
 	// TODO, This is a hot fix for the block hash of logs is `0x0000000000000000000000000000000000000000000000000000000000000000` for system tx
-	// Please check details in https://github.com/bnb-chain/bsc/issues/443
+	// Please check details in https://github.com/oiz-labs/oiz-core/issues/443
 	// This is a temporary fix, the official fix should be a hard fork.
 	const possibleSystemReceipts = 3 // One slash tx, two reward distribute txs.
 	numOfReceipts := len(receipts)
@@ -839,7 +839,7 @@ func (bc *BlockChain) initializeHistoryPruning(latest uint64) error {
 
 	switch bc.cfg.ChainHistoryMode {
 	case history.KeepAll:
-		// TODO(Nathan): BSC currently supports `history.blocks`, but enabling history pruning
+		// TODO(Nathan): OIZ currently supports `history.blocks`, but enabling history pruning
 		// will cause startup failures. Temporarily disable history pruning until fixed.
 		enableHistoryPruning := false
 		if !enableHistoryPruning {

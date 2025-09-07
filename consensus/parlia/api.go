@@ -128,7 +128,7 @@ func (api *API) getHeader(number *rpc.BlockNumber) (header *types.Header) {
 	} else if *number == rpc.FinalizedBlockNumber {
 		header = api.parlia.GetFinalizedHeader(api.chain, currentHeader)
 	} else if *number == rpc.PendingBlockNumber {
-		return nil // no pending blocks on bsc
+		return nil // no pending blocks on oiz
 	} else if *number == rpc.EarliestBlockNumber {
 		header = api.chain.GetHeaderByNumber(0)
 	} else {

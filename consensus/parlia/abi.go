@@ -798,7 +798,7 @@ const validatorSetABIBeforeLuban = `
     },
     {
       "inputs": [],
-      "name": "bscChainID",
+      "name": "oizChainID",
       "outputs": [
         {
           "internalType": "uint16",
@@ -2010,7 +2010,7 @@ const validatorSetABI = `
   },
   {
     "type": "function",
-    "name": "bscChainID",
+    "name": "oizChainID",
     "inputs": [],
     "outputs": [
       {
@@ -3514,7 +3514,7 @@ const slashABI = `
   },
   {
     "type": "function",
-    "name": "bscChainID",
+    "name": "oizChainID",
     "inputs": [],
     "outputs": [
       {
@@ -4751,7 +4751,7 @@ const stakeABI = `[
     },
     {
         "type": "function",
-        "name": "getValidatorTotalPooledBNBRecord",
+        "name": "getValidatorTotalPooledOIZRecord",
         "inputs": [
             {
                 "name": "operatorAddress",
@@ -5003,7 +5003,7 @@ const stakeABI = `[
     },
     {
         "type": "function",
-        "name": "minDelegationBNBChange",
+        "name": "minDelegationOIZChange",
         "inputs": [],
         "outputs": [
             {
@@ -5016,7 +5016,7 @@ const stakeABI = `[
     },
     {
         "type": "function",
-        "name": "minSelfDelegationBNB",
+        "name": "minSelfDelegationOIZ",
         "inputs": [],
         "outputs": [
             {
@@ -5320,7 +5320,7 @@ const stakeABI = `[
                 "internalType": "address"
             },
             {
-                "name": "bnbAmount",
+                "name": "oizAmount",
                 "type": "uint256",
                 "indexed": false,
                 "internalType": "uint256"
@@ -5389,7 +5389,7 @@ const stakeABI = `[
                 "internalType": "uint256"
             },
             {
-                "name": "bnbAmount",
+                "name": "oizAmount",
                 "type": "uint256",
                 "indexed": false,
                 "internalType": "uint256"
@@ -5440,7 +5440,7 @@ const stakeABI = `[
                 "internalType": "address"
             },
             {
-                "name": "bnbAmount",
+                "name": "oizAmount",
                 "type": "uint256",
                 "indexed": false,
                 "internalType": "uint256"
@@ -5477,7 +5477,7 @@ const stakeABI = `[
                 "internalType": "uint256"
             },
             {
-                "name": "bnbAmount",
+                "name": "oizAmount",
                 "type": "uint256",
                 "indexed": false,
                 "internalType": "uint256"
@@ -5602,7 +5602,7 @@ const stakeABI = `[
                 "internalType": "uint256"
             },
             {
-                "name": "bnbAmount",
+                "name": "oizAmount",
                 "type": "uint256",
                 "indexed": false,
                 "internalType": "uint256"
@@ -5709,7 +5709,7 @@ const stakeABI = `[
                 "internalType": "uint256"
             },
             {
-                "name": "bnbAmount",
+                "name": "oizAmount",
                 "type": "uint256",
                 "indexed": false,
                 "internalType": "uint256"

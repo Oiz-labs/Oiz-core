@@ -204,7 +204,7 @@ func (args *TransactionArgs) setFeeDefaults(ctx context.Context, b Backend, head
 	if args.GasPrice == nil && eip1559ParamsSet {
 		if args.MaxFeePerGas.ToInt().Sign() == 0 {
 			// return errors.New("maxFeePerGas must be non-zero")
-			log.Warn("EIP-1559 Tx with zero maxFeePerGas") // BSC accepts zero gas price.
+			log.Warn("EIP-1559 Tx with zero maxFeePerGas") // OIZ accepts zero gas price.
 		}
 		if args.MaxFeePerGas.ToInt().Cmp(args.MaxPriorityFeePerGas.ToInt()) < 0 {
 			return fmt.Errorf("maxFeePerGas (%v) < maxPriorityFeePerGas (%v)", args.MaxFeePerGas, args.MaxPriorityFeePerGas)
@@ -218,7 +218,7 @@ func (args *TransactionArgs) setFeeDefaults(ctx context.Context, b Backend, head
 		// Zero gas-price is not allowed after London fork
 		if args.GasPrice.ToInt().Sign() == 0 && isLondon {
 			// return errors.New("gasPrice must be non-zero after london fork")
-			log.Warn("non EIP-1559 Tx with zero gasPrice") // BSC accepts zero gas price.
+			log.Warn("non EIP-1559 Tx with zero gasPrice") // OIZ accepts zero gas price.
 		}
 		return nil // No need to set anything, user already set GasPrice
 	}

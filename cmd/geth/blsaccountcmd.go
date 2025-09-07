@@ -209,7 +209,7 @@ Delete the selected BLS account from the BLS wallet.`,
 						Description: `
 	geth bls account generate-proof
 
-Generate ownership proof for the selected BLS account from the BLS wallet. The proof is used to prove the ownership of the BLS account when creating validator on BSC after feynman upgrade.`,
+Generate ownership proof for the selected BLS account from the BLS wallet. The proof is used to prove the ownership of the BLS account when creating validator on OIZ after feynman upgrade.`,
 					},
 				},
 			},

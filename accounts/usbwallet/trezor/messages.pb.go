@@ -242,6 +242,15 @@ const (
 	MessageType_MessageType_BinanceOrderMsg     MessageType = 707
 	MessageType_MessageType_BinanceCancelMsg    MessageType = 708
 	MessageType_MessageType_BinanceSignedTx     MessageType = 709
+
+	// OIZ
+MessageType_MessageType_OizGetAddress   MessageType = 800
+MessageType_MessageType_OizAddress      MessageType = 801
+MessageType_MessageType_OizGetPublicKey MessageType = 802
+MessageType_MessageType_OizPublicKey    MessageType = 803
+MessageType_MessageType_OizSignTx       MessageType = 804
+MessageType_MessageType_OizTxRequest    MessageType = 805
+MessageType_MessageType_OizSignedTx     MessageType = 806
 )
 
 // Enum value maps for MessageType.
@@ -440,6 +449,13 @@ var (
 		707: "MessageType_BinanceOrderMsg",
 		708: "MessageType_BinanceCancelMsg",
 		709: "MessageType_BinanceSignedTx",
+		800: "MessageType_OizGetAddress",
+801: "MessageType_OizAddress",
+802: "MessageType_OizGetPublicKey",
+803: "MessageType_OizPublicKey",
+804: "MessageType_OizSignTx",
+805: "MessageType_OizTxRequest",
+806: "MessageType_OizSignedTx",
 	}
 	MessageType_value = map[string]int32{
 		"MessageType_Initialize":                                0,
@@ -635,6 +651,13 @@ var (
 		"MessageType_BinanceOrderMsg":                           707,
 		"MessageType_BinanceCancelMsg":                          708,
 		"MessageType_BinanceSignedTx":                           709,
+		"MessageType_OizGetAddress":    800,
+"MessageType_OizAddress":       801,
+"MessageType_OizGetPublicKey":  802,
+"MessageType_OizPublicKey":     803,
+"MessageType_OizSignTx":        804,
+"MessageType_OizTxRequest":     805,
+"MessageType_OizSignedTx":      806,
 	}
 )
 

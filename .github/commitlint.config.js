@@ -40,5 +40,5 @@ module.exports = {
     ],
   },
   helpUrl:
-    'https://github.com/bnb-chain/bsc/tree/develop/docs/lint/commit.md',
+    'https://github.com/oiz-labs/oiz-core/tree/develop/docs/lint/commit.md',
 }

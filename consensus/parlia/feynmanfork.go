@@ -226,7 +226,7 @@ func getTopValidatorsByVotingPower(validatorItems []ValidatorItem, maxElectedVal
 	for i := 0; i < topN; i++ {
 		item := heap.Pop(hp).(ValidatorItem)
 		eValidators[i] = item.address
-		// as the decimal in BNB Beacon Chain is 1e8 and in BNB Smart Chain is 1e18, we need to divide it by 1e10
+		// as the decimal in OIZ Beacon Chain is 1e8 and in OIZ Smart Chain is 1e18, we need to divide it by 1e10
 		eVotingPowers[i] = new(big.Int).Div(item.votingPower, big.NewInt(1e10)).Uint64()
 		eVoteAddrs[i] = item.voteAddress
 	}

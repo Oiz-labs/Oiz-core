@@ -72,17 +72,17 @@ func testSetupGenesis(t *testing.T, scheme string) {
 			fn: func(db ethdb.Database) (*params.ChainConfig, common.Hash, *params.ConfigCompatError, error) {
 				return SetupGenesisBlock(db, triedb.NewDatabase(db, newDbConfig(scheme)), nil)
 			},
-			wantHash:   params.BSCGenesisHash,
-			wantConfig: params.BSCChainConfig,
+			wantHash:   params.OIZGenesisHash,
+			wantConfig: params.OIZChainConfig,
 		},
 		{
 			name: "mainnet block in DB, genesis == nil",
 			fn: func(db ethdb.Database) (*params.ChainConfig, common.Hash, *params.ConfigCompatError, error) {
-				DefaultBSCGenesisBlock().MustCommit(db, triedb.NewDatabase(db, newDbConfig(scheme)))
+				DefaultOIZGenesisBlock().MustCommit(db, triedb.NewDatabase(db, newDbConfig(scheme)))
 				return SetupGenesisBlock(db, triedb.NewDatabase(db, newDbConfig(scheme)), nil)
 			},
-			wantHash:   params.BSCGenesisHash,
-			wantConfig: params.BSCChainConfig,
+			wantHash:   params.OIZGenesisHash,
+			wantConfig: params.OIZChainConfig,
 		},
 		{
 			name: "chapel block in DB, genesis == nil",
@@ -270,23 +270,23 @@ func TestConfigOrDefault(t *testing.T) {
 	if defaultGenesis.Config.PlanckBlock != nil {
 		t.Errorf("initial config should have PlanckBlock = nil, but instead PlanckBlock = %v", defaultGenesis.Config.PlanckBlock)
 	}
-	gHash := params.BSCGenesisHash
+	gHash := params.OIZGenesisHash
 	config := defaultGenesis.chainConfigOrDefault(gHash, nil)
 
-	if config.ChainID.Cmp(params.BSCChainConfig.ChainID) != 0 {
-		t.Errorf("ChainID of resulting config should be %v, but is %v instead", params.BSCChainConfig.ChainID, config.ChainID)
+	if config.ChainID.Cmp(params.OIZChainConfig.ChainID) != 0 {
+		t.Errorf("ChainID of resulting config should be %v, but is %v instead", params.OIZChainConfig.ChainID, config.ChainID)
 	}
 
-	if config.HomesteadBlock.Cmp(params.BSCChainConfig.HomesteadBlock) != 0 {
-		t.Errorf("resulting config should have HomesteadBlock = %v, but instead is %v", params.BSCChainConfig, config.HomesteadBlock)
+	if config.HomesteadBlock.Cmp(params.OIZChainConfig.HomesteadBlock) != 0 {
+		t.Errorf("resulting config should have HomesteadBlock = %v, but instead is %v", params.OIZChainConfig, config.HomesteadBlock)
 	}
 
 	if config.PlanckBlock == nil {
-		t.Errorf("resulting config should have PlanckBlock = %v , but instead is nil", params.BSCChainConfig.PlanckBlock)
+		t.Errorf("resulting config should have PlanckBlock = %v , but instead is nil", params.OIZChainConfig.PlanckBlock)
 	}
 
-	if config.PlanckBlock.Cmp(params.BSCChainConfig.PlanckBlock) != 0 {
-		t.Errorf("resulting config should have PlanckBlock = %v , but instead is %v", params.BSCChainConfig.PlanckBlock, config.PlanckBlock)
+	if config.PlanckBlock.Cmp(params.OIZChainConfig.PlanckBlock) != 0 {
+		t.Errorf("resulting config should have PlanckBlock = %v , but instead is %v", params.OIZChainConfig.PlanckBlock, config.PlanckBlock)
 	}
 }
 
